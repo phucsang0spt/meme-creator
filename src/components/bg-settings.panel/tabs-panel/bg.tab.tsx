@@ -1,12 +1,18 @@
 import { useState } from "react";
 import styled from "styled-components";
 
-const Root = styled.div``;
+const Root = styled.div`
+  display: flex;
+  flex-direction: column;
+  max-height: 100%;
+  > div {
+    width: 100%;
+  }
+`;
 
 const HeaderTab = styled.ul`
   display: flex;
   align-items: center;
-  height: 30px;
 
   list-style-type: none;
   font-size: 0.7rem;
@@ -17,7 +23,7 @@ const HeaderTab = styled.ul`
     position: relative;
 
     width: 50%;
-    height: 100%;
+    height: 30px;
 
     &::after {
       background-color: rgb(62, 62, 62);
@@ -62,6 +68,38 @@ const HeaderTab = styled.ul`
   }
 `;
 
+const Section = styled.section`
+  flex: 1;
+  min-height: 0;
+  margin-top: 5px;
+  padding-top: 5px;
+
+  overflow: auto;
+  overflow-x: hidden;
+
+  /* width */
+  ::-webkit-scrollbar {
+    width: 5px;
+  }
+
+  /* Track */
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  /* Handle */
+  ::-webkit-scrollbar-thumb {
+    background: #4b4b4b;
+    border-radius: 3px;
+    box-shadow: 0 0 3px 0.1px #0000007a inset;
+  }
+
+  /* Handle on hover */
+  ::-webkit-scrollbar-thumb:hover {
+    background: #4b4b4b;
+  }
+`;
+
 enum BgMode {
   GALLERY,
   LOCAL,
@@ -82,6 +120,80 @@ export function BgTab() {
           onClick={() => setBgMode(BgMode.LOCAL)}
         />
       </HeaderTab>
+      <Section>
+        <p>Text</p>
+        <p>Text</p>
+        <p>Text</p>
+        <p>Text</p>
+        <p>Text</p>
+        <p>Text</p>
+        <p>Text</p>
+        <p>Text</p>
+        <p>Text</p>
+        <p>Text</p>
+        <p>Text</p>
+        <p>Text</p>
+        <p>Text</p>
+        <p>Text</p>
+        <p>Text</p>
+        <p>Text</p>
+        <p>Text</p>
+        <p>Text</p>
+        <p>Text</p>
+        <p>Text</p>
+        <p>Text</p>
+        <p>Text</p>
+        <p>Text</p>
+        <p>Text</p>
+        <p>Text</p>
+        <p>Text</p>
+        <p>Text</p>
+        <p>Text</p>
+        <p>Text</p>
+        <p>Text</p>
+        <p>Text</p>
+        <p>Text</p>
+        <p>Text</p>
+        <p>Text</p>
+        <p>Text</p>
+        <p>Text</p>
+        <p>Text</p>
+        <p>Text</p>
+        <p>Text</p>
+        <p>Text</p>
+        <p>Text</p>
+        <p>Text</p>
+        <p>Text</p>
+        <p>Text</p>
+        <p>Text</p>
+        <p>Text</p>
+        <p>Text</p>
+        <p>Text</p>
+        <p>Text</p>
+        <p>Text</p>
+        <p>Text</p>
+        <p>Text</p>
+        <p>Text</p>
+        <p>Text</p>
+        <p>Text</p>
+        <p>Text</p>
+        <p>Text</p>
+        <p>Text</p>
+        <p>Text</p>
+        <p>Text</p>
+        <p>Text</p>
+        <p>Text</p>
+        <p>Text</p>
+        <p>Text</p>
+        <p>Text</p>
+        <p>Text</p>
+        <p>Text</p>
+        <p>Text</p>
+        <p>Text</p>
+        <p>Text</p>
+        <p>Text</p>
+        <p>Text</p>
+      </Section>
     </Root>
   );
 }
