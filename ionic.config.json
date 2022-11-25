@@ -1,0 +1,7 @@
+{
+  "name": "meme-creator",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "react"
+}

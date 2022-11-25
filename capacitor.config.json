@@ -1,0 +1,6 @@
+{
+  "appId": "com.spt.hc.meme.creator",
+  "appName": "Meme Creator",
+  "webDir": "build",
+  "bundledWebRuntime": false
+}

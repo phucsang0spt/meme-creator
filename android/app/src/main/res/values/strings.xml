@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">Mini Farm Survival</string>
+    <string name="title_activity_main">Mini Farm Survival</string>
+    <string name="package_name">com.spt.hc.mini.farm.survival</string>
+    <string name="custom_url_scheme">com.spt.hc.mini.farm.survival</string>
+</resources>
