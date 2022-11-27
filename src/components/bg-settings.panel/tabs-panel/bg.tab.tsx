@@ -1,10 +1,13 @@
 import { useState } from "react";
 import styled from "styled-components";
 
+import { GalleryTemplates } from "components/gallery-templates";
+import { LocalTemplates } from "components/local-templates";
+
 const Root = styled.div`
   display: flex;
   flex-direction: column;
-  max-height: 100%;
+  height: 100%;
   > div {
     width: 100%;
   }
@@ -74,11 +77,11 @@ const Section = styled.section`
   margin-top: 5px;
   padding-top: 5px;
 
-  overflow: auto;
+  overflow: scroll;
   overflow-x: hidden;
 
   /* width */
-  ::-webkit-scrollbar {
+  scrollbar {
     width: 5px;
   }
 
@@ -92,11 +95,6 @@ const Section = styled.section`
     background: #4b4b4b;
     border-radius: 3px;
     box-shadow: 0 0 3px 0.1px #0000007a inset;
-  }
-
-  /* Handle on hover */
-  ::-webkit-scrollbar-thumb:hover {
-    background: #4b4b4b;
   }
 `;
 
@@ -121,78 +119,7 @@ export function BgTab() {
         />
       </HeaderTab>
       <Section>
-        <p>Text</p>
-        <p>Text</p>
-        <p>Text</p>
-        <p>Text</p>
-        <p>Text</p>
-        <p>Text</p>
-        <p>Text</p>
-        <p>Text</p>
-        <p>Text</p>
-        <p>Text</p>
-        <p>Text</p>
-        <p>Text</p>
-        <p>Text</p>
-        <p>Text</p>
-        <p>Text</p>
-        <p>Text</p>
-        <p>Text</p>
-        <p>Text</p>
-        <p>Text</p>
-        <p>Text</p>
-        <p>Text</p>
-        <p>Text</p>
-        <p>Text</p>
-        <p>Text</p>
-        <p>Text</p>
-        <p>Text</p>
-        <p>Text</p>
-        <p>Text</p>
-        <p>Text</p>
-        <p>Text</p>
-        <p>Text</p>
-        <p>Text</p>
-        <p>Text</p>
-        <p>Text</p>
-        <p>Text</p>
-        <p>Text</p>
-        <p>Text</p>
-        <p>Text</p>
-        <p>Text</p>
-        <p>Text</p>
-        <p>Text</p>
-        <p>Text</p>
-        <p>Text</p>
-        <p>Text</p>
-        <p>Text</p>
-        <p>Text</p>
-        <p>Text</p>
-        <p>Text</p>
-        <p>Text</p>
-        <p>Text</p>
-        <p>Text</p>
-        <p>Text</p>
-        <p>Text</p>
-        <p>Text</p>
-        <p>Text</p>
-        <p>Text</p>
-        <p>Text</p>
-        <p>Text</p>
-        <p>Text</p>
-        <p>Text</p>
-        <p>Text</p>
-        <p>Text</p>
-        <p>Text</p>
-        <p>Text</p>
-        <p>Text</p>
-        <p>Text</p>
-        <p>Text</p>
-        <p>Text</p>
-        <p>Text</p>
-        <p>Text</p>
-        <p>Text</p>
-        <p>Text</p>
+        {bgMode === BgMode.GALLERY ? <GalleryTemplates /> : <LocalTemplates />}
       </Section>
     </Root>
   );
