@@ -1,24 +1,30 @@
-import { ViewPortEntity } from "entities/viewport.entity";
-import { Resolutions } from "options";
 import { useEntity } from "react-simple-game-engine/lib/utilities";
 import styled from "styled-components";
+
+import { ShapeManagerEntity } from "entities/shape-manager.entity";
+import { ViewPortEntity } from "entities/viewport.entity";
+import { Resolutions } from "options";
 
 const SettingsProperty = styled.div`
   > section {
     margin-top: 7px;
     padding-left: 5px;
 
-    font-size: 0.9rem;
-    line-height: 0.9rem;
+    font-size: 0.8rem;
+    line-height: 0.8rem;
+  }
+  + * {
+    margin-top: 20px;
   }
 `;
 
-const Radio = styled.label`
+const Ticker = styled.label`
   display: inline-flex;
   align-items: center;
 
   > div {
     margin-left: 5px;
+    margin-top: calc(0.4rem - 5px);
     width: 10px;
     height: 10px;
     border: 1px solid #e74c3c;
@@ -51,9 +57,6 @@ const RadioGroup = styled.div`
   width: 100%;
   display: flex;
   align-items: center;
-  font-size: 0.8rem;
-  line-height: 0.8rem;
-
   > label {
     + label {
       margin-left: 12px;
@@ -61,13 +64,16 @@ const RadioGroup = styled.div`
   }
 `;
 
+const resolutionOptions = [
+  { label: "HD", code: "hd" },
+  { label: "Full HD", code: "full-hd" },
+  { label: "2K", code: "2k" },
+];
+
 export function SettingsTab() {
   const [viewportEntity] = useEntity(ViewPortEntity);
-  const resolutionOptions = [
-    { label: "HD", code: "hd" },
-    { label: "Full HD", code: "full-hd" },
-    { label: "2K", code: "2k" },
-  ];
+  const [shapeManagerEntity] = useEntity(ShapeManagerEntity);
+
   return (
     <div>
       <SettingsProperty>
@@ -87,7 +93,7 @@ export function SettingsTab() {
             }}
           >
             {resolutionOptions.map((opt) => (
-              <Radio key={opt.code}>
+              <Ticker key={opt.code}>
                 <span>{opt.label}</span>
                 <input
                   type="radio"
@@ -96,9 +102,26 @@ export function SettingsTab() {
                   defaultChecked={opt.code === "hd"}
                 />
                 <div />
-              </Radio>
+              </Ticker>
             ))}
           </RadioGroup>
+        </section>
+      </SettingsProperty>
+
+      <SettingsProperty>
+        <p>Trim</p>
+        <section>
+          <Ticker>
+            <span>By transparent</span>
+            <input
+              type="checkbox"
+              defaultChecked={shapeManagerEntity.trimExport}
+              onChange={({ target }) => {
+                shapeManagerEntity.trimExport = target.checked;
+              }}
+            />
+            <div />
+          </Ticker>
         </section>
       </SettingsProperty>
     </div>

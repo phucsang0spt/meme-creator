@@ -44,8 +44,14 @@ type GridPicProps = {
     id: string;
     src: string;
   }[];
+  onSelect?: (template: GridPicProps["data"][0]) => void;
 };
-export function GridPic({ loading = false, column = 3, data }: GridPicProps) {
+export function GridPic({
+  loading = false,
+  column = 3,
+  data,
+  onSelect,
+}: GridPicProps) {
   return loading ? (
     <Loader>
       <SpinnerCircular color="#39c" size={30} />
@@ -53,7 +59,7 @@ export function GridPic({ loading = false, column = 3, data }: GridPicProps) {
   ) : (
     <Root column={column}>
       {data.map((pic) => (
-        <div key={pic.id}>
+        <div key={pic.id} onClick={() => onSelect?.(pic)}>
           <SquareDiv>
             <Thumbnail src={pic.src} alt="" />
           </SquareDiv>

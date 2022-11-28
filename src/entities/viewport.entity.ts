@@ -49,6 +49,34 @@ export class ViewPortEntity extends RectEntity<Props> {
     };
   }
 
+  getBounding(scale = 1) {
+    const fixedResolution = {
+      width: this.fixedResolution.width * scale,
+      height: this.fixedResolution.height * scale,
+    };
+    const rendererSize = {
+      width: this.renderer.width * scale,
+      height: this.renderer.height * scale,
+    };
+    const viewport = {
+      width: fixedResolution.width,
+      height: fixedResolution.height,
+      left:
+        this.basePosition.x * scale +
+        rendererSize.width / 2 -
+        fixedResolution.width / 2,
+      top:
+        rendererSize.height / 2 -
+        fixedResolution.height / 2 +
+        this.basePosition.y * scale,
+      right: 0,
+      bottom: 0,
+    };
+    viewport.right = viewport.left + viewport.width;
+    viewport.bottom = viewport.top + viewport.height;
+    return viewport;
+  }
+
   bootstrapCompleted() {
     const konvaManager = this.worldManagement.getEntity(KonvaManagerEntity);
     setTimeout(() => {

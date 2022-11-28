@@ -14,12 +14,85 @@ export class InteractLayer extends LayerEZ {
     };
   }
 
-  export(viewportEntity: ViewPortEntity) {
+  iterativeShapes(on: (shape: Shape) => void) {
+    const shapes: Shape[] = [];
+    for (const shape of this.getChildren()) {
+      if (shape instanceof Shape && shape.name() !== "holder") {
+        on(shape);
+        shapes.push(shape);
+      }
+    }
+    return shapes;
+  }
+
+  private getShapesBounding() {
+    let left: number, right: number;
+    let top: number, bottom: number;
+    const shapes = this.iterativeShapes((shape) => {
+      const shapeX = shape.x();
+      const shapeY = shape.y();
+      const shapeWidth = shape.width();
+      const shapeHeight = shape.height();
+
+      const shapeLeft = shapeX - shapeWidth / 2;
+      const shapeRight = shapeX + shapeWidth / 2;
+
+      const shapeTop = shapeY - shapeHeight / 2;
+      const shapeBottom = shapeY + shapeHeight / 2;
+
+      if (left != null) {
+        if (shapeLeft < left) {
+          left = shapeLeft;
+        }
+      } else {
+        left = shapeLeft;
+      }
+
+      if (right != null) {
+        if (shapeRight > right) {
+          right = shapeRight;
+        }
+      } else {
+        right = shapeRight;
+      }
+
+      if (top != null) {
+        if (shapeTop < top) {
+          top = shapeTop;
+        }
+      } else {
+        top = shapeTop;
+      }
+      if (bottom != null) {
+        if (shapeBottom > bottom) {
+          bottom = shapeBottom;
+        }
+      } else {
+        bottom = shapeBottom;
+      }
+    });
+
+    if (shapes.length) {
+      return {
+        left: left + this.renderer.width / 2,
+        top: top + this.renderer.height / 2,
+        right: right + this.renderer.width / 2,
+        bottom: bottom + this.renderer.height / 2,
+      };
+    }
+    return undefined;
+  }
+
+  export(viewportEntity: ViewPortEntity, trim: boolean) {
+    const exportScale = 2;
+    const resolutionRatio =
+      viewportEntity.fixedResolution.width /
+      viewportEntity.currentResolution.width;
+
     //reset camera
     this.renderer.simpleCamera.x = 0;
     this.renderer.simpleCamera.y = 0;
     this.clearTransformer();
-    const exportRatio = 2;
 
     const canvas = document.createElement("canvas");
     canvas.width = viewportEntity.currentResolution.width;
@@ -28,33 +101,67 @@ export class InteractLayer extends LayerEZ {
     const ctx = canvas.getContext("2d");
     document.body.appendChild(canvas);
 
-    const rendererSize = {
-      width: this.renderer.width * exportRatio,
-      height: this.renderer.height * exportRatio,
+    let cropZone: {
+      left: number;
+      top: number;
+      width: number;
+      height: number;
+      right: number;
+      bottom: number;
     };
-    const viewport = {
-      width: viewportEntity.fixedResolution.width * exportRatio,
-      height: viewportEntity.fixedResolution.height * exportRatio,
-      left:
-        viewportEntity.basePosition.x * exportRatio +
-        rendererSize.width / 2 -
-        (viewportEntity.fixedResolution.width * exportRatio) / 2,
-      top:
-        rendererSize.height / 2 -
-        (viewportEntity.fixedResolution.height * exportRatio) / 2 +
-        viewportEntity.basePosition.y * exportRatio,
-    };
+
+    const viewportBounding = viewportEntity.getBounding(exportScale);
+    const shapesBounding = this.getShapesBounding();
+    if (shapesBounding && trim) {
+      // trim by shapes bounding but can not overflow viewport
+      cropZone = {
+        left: shapesBounding.left * exportScale,
+        right: shapesBounding.right * exportScale,
+        top: shapesBounding.top * exportScale,
+        bottom: shapesBounding.bottom * exportScale,
+        width: 0,
+        height: 0,
+      };
+      cropZone.left = this.renderer.constrainMin(
+        cropZone.left,
+        viewportBounding.left
+      );
+      cropZone.right = this.renderer.constrainMax(
+        cropZone.right,
+        viewportBounding.right
+      );
+      cropZone.top = this.renderer.constrainMin(
+        cropZone.top,
+        viewportBounding.top
+      );
+      cropZone.bottom = this.renderer.constrainMax(
+        cropZone.bottom,
+        viewportBounding.bottom
+      );
+      cropZone.width = cropZone.right - cropZone.left;
+      cropZone.height = cropZone.bottom - cropZone.top;
+    } else {
+      cropZone = viewportBounding;
+    }
     const src = this.toDataURL({
-      pixelRatio: exportRatio,
+      pixelRatio: exportScale,
     });
     const img = new Image();
     img.onload = () => {
+      const nonScaleCrop = {
+        width: cropZone.width / exportScale,
+        height: cropZone.height / exportScale,
+      };
+
+      // convert crop size to resolution ratio
+      canvas.width = nonScaleCrop.width / resolutionRatio;
+      canvas.height = nonScaleCrop.height / resolutionRatio;
       ctx.drawImage(
         img,
-        viewport.left,
-        viewport.top,
-        viewport.width,
-        viewport.height,
+        cropZone.left,
+        cropZone.top,
+        cropZone.width,
+        cropZone.height,
         0,
         0,
         canvas.width,

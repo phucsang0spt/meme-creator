@@ -33,13 +33,6 @@ export class KonvaRenderer extends Stage {
     this.offsetY(-renderer.height / 2 + renderer.simpleCamera.y);
   }
 
-  // iterativeShapes(on: (shape: Shape) => void) {
-  //   for (const shape of this.layer.getChildren()) {
-  //     if (shape instanceof Shape && shape.name() !== "holder") {
-  //       on(shape);
-  //     }
-  //   }
-  // }
 
   // scaleStage(value: number) {
   //   this.clearTransformer();
