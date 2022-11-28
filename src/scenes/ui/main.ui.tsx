@@ -17,6 +17,8 @@ import {
   BgSettingsPanel,
   BgSettingsPanelFuncs,
 } from "components/bg-settings.panel";
+import { Loading } from "components/loading";
+import { useConnectRender } from "use-connect-render/lib";
 
 const FloatIconSize = 30;
 
@@ -90,6 +92,7 @@ const FloatIcon = styled.span`
 
 type MenuTabCode = typeof ContextModes[0]["code"] | "export";
 export function MainUI() {
+  const { push } = useConnectRender("loading");
   const refBgSettingsPanel = useRef<BgSettingsPanelFuncs>();
 
   const [shapeManagerEntity] = useEntity(ShapeManagerEntity);
@@ -106,7 +109,14 @@ export function MainUI() {
           selected={contextMode}
           onChange={(code: MenuTabCode) => {
             if (code === "export") {
-              shapeManagerEntity.export();
+              shapeManagerEntity.export({
+                onStartExport: () => {
+                  push("global", true);
+                },
+                onCompletedExport: () => {
+                  push("global", false);
+                },
+              });
             } else {
               setContextMode(code as ContextMode);
             }
@@ -155,6 +165,7 @@ export function MainUI() {
         <div />
       </Footer>
       <BgSettingsPanel ref={refBgSettingsPanel} />
+      <Loading />
     </Root>
   );
 }

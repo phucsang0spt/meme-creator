@@ -10,6 +10,7 @@ import { KonvaManagerEntity } from "./konva-manager.entity";
 import { ViewPortEntity } from "./viewport.entity";
 import { Rect } from "konva/lib/shapes/Rect";
 import { Image } from "konva/lib/shapes/Image";
+import { permissionWriteFile } from "download";
 
 type Props = {};
 
@@ -55,8 +56,11 @@ export class ShapeManagerEntity extends RectEntity<Props> {
     }, 0);
   }
 
-  export() {
-    this.interactLayer.export(this.viewportEntity, this.trimExport);
+  async export(
+    events: { onStartExport?: () => void; onCompletedExport?: () => void } = {}
+  ) {
+    await permissionWriteFile();
+    this.interactLayer.export(this.viewportEntity, this.trimExport, events);
   }
 
   async setBackground(src: string) {

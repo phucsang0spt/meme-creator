@@ -83,7 +83,11 @@ export class InteractLayer extends LayerEZ {
     return undefined;
   }
 
-  export(viewportEntity: ViewPortEntity, trim: boolean) {
+  export(
+    viewportEntity: ViewPortEntity,
+    trim: boolean,
+    events: { onStartExport?: () => void; onCompletedExport?: () => void } = {}
+  ) {
     const exportScale = 2;
     const resolutionRatio =
       viewportEntity.fixedResolution.width /
@@ -169,7 +173,11 @@ export class InteractLayer extends LayerEZ {
       );
 
       const output = canvas.toDataURL("img/png");
-      downloadFile("meme.png", output);
+
+      events.onStartExport?.();
+      downloadFile("meme.png", output).then(() => {
+        events.onCompletedExport?.();
+      });
 
       document.body.removeChild(canvas);
     };
