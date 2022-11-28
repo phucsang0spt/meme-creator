@@ -1,8 +1,8 @@
+import { downloadFile } from "download";
 import { ViewPortEntity } from "entities/viewport.entity";
 import Konva from "konva";
 import { Shape, ShapeConfig } from "konva/lib/Shape";
 import { Transformer } from "konva/lib/shapes/Transformer";
-import { downloadFile } from "utils";
 import { LayerEZ } from "./layer.ez";
 
 export class InteractLayer extends LayerEZ {

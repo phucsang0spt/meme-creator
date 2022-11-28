@@ -10,7 +10,7 @@ const Root = styled.div<{
   grid-column-gap: 10px;
   grid-row-gap: 10px;
   padding-right: 5px;
-  max-width: 170px;
+  max-width: 190px;
 
   transform: translateX(-50%);
   position: relative;

@@ -9,6 +9,7 @@ const Root = styled.div<{ isOpen: boolean }>`
   width: 100%;
   height: 100%;
   top: 0;
+  color: #fff;
 
   > div {
     position: relative;

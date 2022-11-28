@@ -23,14 +23,3 @@ export function padL(a: number, b = 2) {
   //string/number,length=2
   return (new Array(b || 2).join("0") + a).slice(-b);
 }
-
-export function downloadFile(filename: string, src: string) {
-  const a = document.createElement("a");
-  a.href = src;
-  a.download = filename;
-  document.body.appendChild(a);
-  a.click();
-  window.URL.revokeObjectURL(src);
-
-  document.body.removeChild(a);
-}
