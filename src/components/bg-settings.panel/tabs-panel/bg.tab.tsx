@@ -1,8 +1,8 @@
 import { useState } from "react";
 import styled from "styled-components";
 
-import { GalleryTemplates } from "components/gallery-templates";
-import { LocalTemplates } from "components/local-templates";
+import { GalleyMemeTemplates } from "components/gallery-meme-templates";
+import { LocalMemeTemplates } from "components/local-meme-templates";
 
 const Root = styled.div`
   display: flex;
@@ -20,7 +20,7 @@ const HeaderTab = styled.ul`
   list-style-type: none;
   font-size: 0.7rem;
   line-height: 0.7rem;
-  color: #5e5e5e;
+  color: #929191;
 
   > li {
     position: relative;
@@ -119,7 +119,11 @@ export function BgTab() {
         />
       </HeaderTab>
       <Section>
-        {bgMode === BgMode.GALLERY ? <GalleryTemplates /> : <LocalTemplates />}
+        {bgMode === BgMode.GALLERY ? (
+          <GalleyMemeTemplates />
+        ) : (
+          <LocalMemeTemplates />
+        )}
       </Section>
     </Root>
   );

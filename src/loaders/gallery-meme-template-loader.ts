@@ -8,16 +8,15 @@ const paths = (require as any)
   )
   .keys();
 
-export const galleryTemplates = paths
+export const galleryMemeTemplates = paths
   .map((path: string) => {
     const [, code] =
       path.match(/^assets\/templates\/([a-zA-Z0-9|-]+)\.(png|jpg|jpeg)/) || [];
     return code
       ? {
-          code,
           id: genId(),
           src: require(`../${path}`),
         }
       : null;
   })
-  .filter(Boolean) as { code: string; id: string; src: string }[];
+  .filter(Boolean) as MemeTemplate[];

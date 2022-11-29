@@ -23,3 +23,12 @@ export function padL(a: number, b = 2) {
   //string/number,length=2
   return (new Array(b || 2).join("0") + a).slice(-b);
 }
+
+export function fileToBase64(file: File): Promise<string> {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = () => resolve(reader.result as string);
+    reader.onerror = (error) => reject(error);
+  });
+}

@@ -112,7 +112,7 @@ export function SettingsTab() {
         <p>Trim</p>
         <section>
           <Ticker>
-            <span>By transparent</span>
+            <span>Trim avoid</span>
             <input
               type="checkbox"
               defaultChecked={shapeManagerEntity.trimExport}

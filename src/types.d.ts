@@ -3,3 +3,8 @@ declare interface Window {
 }
 
 declare var Renderer: Window["Renderer"];
+
+type MemeTemplate = {
+  id: string;
+  src: string;
+};
