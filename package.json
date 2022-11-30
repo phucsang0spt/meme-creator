@@ -21,7 +21,7 @@
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
     "react-scripts": "^5.0.0",
-    "react-simple-game-engine": "^0.3.18",
+    "react-simple-game-engine": "^0.3.20",
     "react-square-div": "^1.0.4",
     "spinners-react": "^1.0.7",
     "styled-components": "^5.3.5",

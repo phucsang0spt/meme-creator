@@ -41,7 +41,7 @@ export type BgSettingsPanelFuncs = {
 };
 
 function BgSettingsPanelRef(_: any, ref: any) {
-  const [isOpen, setOpen] = useState(true);
+  const [isOpen, setOpen] = useState(false);
 
   useImperativeHandle(
     ref,

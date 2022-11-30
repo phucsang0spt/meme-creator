@@ -1,28 +1,25 @@
-import { downloadFile } from "download";
-import { ViewPortEntity } from "entities/viewport.entity";
 import Konva from "konva";
-import { Shape, ShapeConfig } from "konva/lib/Shape";
+import { Group } from "konva/lib/Group";
+import { Node, NodeConfig } from "konva/lib/Node";
+import { Shape } from "konva/lib/Shape";
+import { Rect } from "konva/lib/shapes/Rect";
 import { Transformer } from "konva/lib/shapes/Transformer";
+
+import { ViewPortEntity } from "entities/viewport.entity";
+
+import { downloadFile } from "download";
+
 import { LayerEZ } from "./layer.ez";
+import { Image } from "konva/lib/shapes/Image";
 
 export class InteractLayer extends LayerEZ {
   private tr!: Transformer;
-  constructor() {
+  private readonly toolStack: Record<string, Group> = {};
+  constructor(private readonly assets: { trashIcon: HTMLImageElement }) {
     super();
     this.onAddedToStage = () => {
       this.setupTransformer();
     };
-  }
-
-  iterativeShapes(on: (shape: Shape) => void) {
-    const shapes: Shape[] = [];
-    for (const shape of this.getChildren()) {
-      if (shape instanceof Shape && shape.name() !== "holder") {
-        on(shape);
-        shapes.push(shape);
-      }
-    }
-    return shapes;
   }
 
   private getShapesBounding() {
@@ -81,6 +78,215 @@ export class InteractLayer extends LayerEZ {
       };
     }
     return undefined;
+  }
+  private clearTransformer() {
+    this.setTransformNodes([]);
+  }
+
+  private removeTarget(target: ShapeInput) {
+    this.unTransformTarget(target as Shape);
+    target.onBeforeDestroy?.();
+    target.destroy();
+  }
+
+  private unTransformTarget(target: Shape) {
+    const nodes = this.tr.nodes().slice(); // use slice to have new copy of array
+    nodes.splice(nodes.indexOf(target), 1);
+    this.setTransformNodes(nodes);
+  }
+
+  private setTransformNodes(nodes: Node<NodeConfig>[]) {
+    this.tr.nodes(nodes);
+    const currentNodes = this.tr
+      .nodes()
+      .filter((node) => !!(node as ShapeInput).toolable);
+
+    const unStackIds = Object.keys(this.toolStack).filter(
+      (id) => !currentNodes.some((node) => node._id.toString() === id)
+    );
+
+    for (const id of unStackIds) {
+      this.toolStack[id].destroy();
+      delete this.toolStack[id];
+    }
+
+    for (const node of currentNodes) {
+      const id = node._id.toString();
+      // show tool
+      if (!this.toolStack[id]) {
+        const holderWidth = this.renderer.constrain(node.width(), 100, 150);
+        const holderHeight = 30;
+        const holderMarginTop = 40;
+        this.toolStack[id] = new Group({
+          x: node.x(),
+          y: node.y() + node.getClientRect().height / 2 + holderMarginTop,
+        });
+        const holder = new Rect({
+          x: 0,
+          y: 0,
+          offsetX: holderWidth / 2,
+          offsetY: holderHeight / 2,
+          width: holderWidth,
+          height: holderHeight,
+          fill: "whitesmoke",
+          stroke: "#39c",
+          strokeWidth: 1,
+          cornerRadius: 5,
+          name: "remover-holder",
+        });
+        const deleteBtn = new Image({
+          x: 0,
+          y: 0,
+          offsetX: 24 / 2,
+          offsetY: 24 / 2,
+          image: this.assets.trashIcon,
+        });
+        deleteBtn.on("click tap", () => {
+          // delete shape
+          this.removeTarget(node as Shape);
+        });
+
+        this.toolStack[id].add(holder);
+        this.toolStack[id].add(deleteBtn);
+        this.add(this.toolStack[id]);
+
+        node.on("transform", () => {
+          // update tool position when move
+          if (this.toolStack[id]) {
+            this.toolStack[id].setAttrs({
+              x: node.x(),
+              y: node.y() + node.getClientRect().height / 2 + holderMarginTop,
+            });
+          }
+        });
+        node.on("dragmove", () => {
+          // update tool position when move
+          if (this.toolStack[id]) {
+            this.toolStack[id].setAttrs({
+              x: node.x(),
+              y: node.y() + node.getClientRect().height / 2 + holderMarginTop,
+            });
+          }
+        });
+      }
+    }
+  }
+
+  private setupTransformer() {
+    const stage = this.getStage();
+    this.tr = new Konva.Transformer();
+    this.originAdd(this.tr);
+    // add a new feature, lets add ability to draw selection rectangle
+    const selectionRectangle = new Konva.Rect({
+      fill: "rgba(0,0,255,0.5)",
+      visible: false,
+      name: "holder",
+    });
+    this.add(selectionRectangle);
+
+    let x1: number, y1: number, x2: number, y2: number;
+    stage.on("mousedown touchstart", (e) => {
+      // do nothing if we mousedown on any shape
+      if (e.target !== stage) {
+        return;
+      }
+      e.evt.preventDefault();
+      const { x: pntX, y: pntY } = this.getPointerPosition();
+      x1 = pntX;
+      y1 = pntY;
+      x2 = x1;
+      y2 = y1;
+
+      selectionRectangle.visible(true);
+      selectionRectangle.width(0);
+      selectionRectangle.height(0);
+    });
+
+    stage.on("mousemove touchmove", (e) => {
+      // do nothing if we didn't start selection
+      if (!selectionRectangle.visible()) {
+        return;
+      }
+      e.evt.preventDefault();
+      const { x: pntX, y: pntY } = this.getPointerPosition();
+      x2 = pntX;
+      y2 = pntY;
+
+      selectionRectangle.setAttrs({
+        x: Math.min(x1, x2),
+        y: Math.min(y1, y2),
+        width: Math.abs(x2 - x1),
+        height: Math.abs(y2 - y1),
+      });
+    });
+
+    stage.on("mouseup touchend", (e) => {
+      // do nothing if we didn't start selection
+      if (!selectionRectangle.visible()) {
+        return;
+      }
+      e.evt.preventDefault();
+      // update visibility in timeout, so we can check it in click event
+      setTimeout(() => {
+        selectionRectangle.visible(false);
+      });
+
+      var shapes = stage.find(".selectable-shape");
+      var box = selectionRectangle.getClientRect();
+      var selected = shapes.filter((shape) =>
+        Konva.Util.haveIntersection(box, shape.getClientRect())
+      );
+      this.setTransformNodes(selected);
+    });
+
+    // clicks should select/deselect shapes
+    stage.on("click tap", (e) => {
+      // if we are selecting with rect, do nothing
+      if (selectionRectangle.visible()) {
+        return;
+      }
+      const target = e.target;
+
+      // if click on empty area - remove all selections
+      if (target === stage) {
+        this.setTransformNodes([]);
+        return;
+      }
+
+      // do nothing if clicked NOT on our rectangles
+      if (!target.hasName("selectable-shape")) {
+        return;
+      }
+
+      // do we pressed shift or ctrl?
+      const metaPressed = e.evt.shiftKey || e.evt.ctrlKey || e.evt.metaKey;
+      const isSelected = this.tr.nodes().indexOf(target) >= 0;
+
+      if (!metaPressed && !isSelected) {
+        // if no key pressed and the node is not selected
+        // select just one
+        this.setTransformNodes([target]);
+      } else if (metaPressed && isSelected) {
+        // if we pressed keys and node was selected
+        // we need to remove it from selection:
+        this.unTransformTarget(target as Shape);
+      } else if (metaPressed && !isSelected) {
+        // add the node into selection
+        const nodes = this.tr.nodes().concat([target]);
+        this.setTransformNodes(nodes);
+      }
+    });
+  }
+
+  iterativeShapes(on: (shape: Shape) => void) {
+    const shapes: Shape[] = [];
+    for (const shape of this.getChildren()) {
+      if (shape instanceof Shape && shape.name() !== "holder") {
+        on(shape);
+        shapes.push(shape);
+      }
+    }
+    return shapes;
   }
 
   export(
@@ -150,7 +356,7 @@ export class InteractLayer extends LayerEZ {
     const src = this.toDataURL({
       pixelRatio: exportScale,
     });
-    const img = new Image();
+    const img = new window.Image();
     img.onload = () => {
       const nonScaleCrop = {
         width: cropZone.width / exportScale,
@@ -184,121 +390,23 @@ export class InteractLayer extends LayerEZ {
     img.src = src;
   }
 
-  private clearTransformer() {
-    this.tr.nodes([]);
+  getPointerPosition() {
+    const { x, y } = this.getStage().getPointerPosition();
+    const { width, height, simpleCamera } = this.renderer;
+    return {
+      x: x - width / 2 + simpleCamera.x,
+      y: y - height / 2 + simpleCamera.y,
+    };
   }
 
-  private setupTransformer() {
-    const stage = this.getStage();
-    this.tr = new Konva.Transformer();
-    this.originAdd(this.tr);
-    // add a new feature, lets add ability to draw selection rectangle
-    const selectionRectangle = new Konva.Rect({
-      fill: "rgba(0,0,255,0.5)",
-      visible: false,
-      name: "holder",
-    });
-    this.add(selectionRectangle);
-
-    let x1: number, y1: number, x2: number, y2: number;
-    stage.on("mousedown touchstart", (e) => {
-      // do nothing if we mousedown on any shape
-      if (e.target !== stage) {
-        return;
-      }
-      e.evt.preventDefault();
-      x1 = stage.getPointerPosition().x - this.renderer.width / 2;
-      y1 = stage.getPointerPosition().y - this.renderer.height / 2;
-      x2 = x1;
-      y2 = y1;
-
-      selectionRectangle.visible(true);
-      selectionRectangle.width(0);
-      selectionRectangle.height(0);
-    });
-
-    stage.on("mousemove touchmove", (e) => {
-      // do nothing if we didn't start selection
-      if (!selectionRectangle.visible()) {
-        return;
-      }
-      e.evt.preventDefault();
-      x2 = stage.getPointerPosition().x - this.renderer.width / 2;
-      y2 = stage.getPointerPosition().y - this.renderer.height / 2;
-
-      selectionRectangle.setAttrs({
-        x: Math.min(x1, x2),
-        y: Math.min(y1, y2),
-        width: Math.abs(x2 - x1),
-        height: Math.abs(y2 - y1),
-      });
-    });
-
-    stage.on("mouseup touchend", (e) => {
-      // do nothing if we didn't start selection
-      if (!selectionRectangle.visible()) {
-        return;
-      }
-      e.evt.preventDefault();
-      // update visibility in timeout, so we can check it in click event
-      setTimeout(() => {
-        selectionRectangle.visible(false);
-      });
-
-      var shapes = stage.find(".selectable-shape");
-      var box = selectionRectangle.getClientRect();
-      var selected = shapes.filter((shape) =>
-        Konva.Util.haveIntersection(box, shape.getClientRect())
-      );
-      this.tr.nodes(selected);
-    });
-
-    // clicks should select/deselect shapes
-    stage.on("click tap", (e) => {
-      // if we are selecting with rect, do nothing
-      if (selectionRectangle.visible()) {
-        return;
-      }
-      const target = e.target;
-
-      // if click on empty area - remove all selections
-      if (target === stage) {
-        this.tr.nodes([]);
-        return;
-      }
-
-      // do nothing if clicked NOT on our rectangles
-      if (!target.hasName("selectable-shape")) {
-        return;
-      }
-
-      // do we pressed shift or ctrl?
-      const metaPressed = e.evt.shiftKey || e.evt.ctrlKey || e.evt.metaKey;
-      const isSelected = this.tr.nodes().indexOf(target) >= 0;
-
-      if (!metaPressed && !isSelected) {
-        // if no key pressed and the node is not selected
-        // select just one
-        this.tr.nodes([target]);
-      } else if (metaPressed && isSelected) {
-        // if we pressed keys and node was selected
-        // we need to remove it from selection:
-        const nodes = this.tr.nodes().slice(); // use slice to have new copy of array
-        // remove node from array
-        nodes.splice(nodes.indexOf(target), 1);
-        this.tr.nodes(nodes);
-      } else if (metaPressed && !isSelected) {
-        // add the node into selection
-        const nodes = this.tr.nodes().concat([target]);
-        this.tr.nodes(nodes);
-      }
-    });
-  }
-
-  add(shape: Shape<ShapeConfig>) {
+  add(shape: ShapeInput) {
     if (!shape.name()) {
       shape.name("selectable-shape");
     }
+    if (shape.toolable == null) {
+      shape.toolable = true;
+    }
+
     return super.add(shape);
   }
 }

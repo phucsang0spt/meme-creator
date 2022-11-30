@@ -22,7 +22,7 @@ export class LayerEZ extends Layer {
     return super.add(shape);
   }
 
-  add(shape: Shape<ShapeConfig>) {
+  add(shape: ShapeInput) {
     shape.offset({ x: shape.width() / 2, y: shape.height() / 2 });
     return super.add(shape);
   }

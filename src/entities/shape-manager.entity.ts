@@ -3,7 +3,10 @@ import {
   LogicComponent,
   RectEntity,
 } from "react-simple-game-engine";
-import { EntityPrepare } from "react-simple-game-engine/lib/export-types";
+import {
+  Avatar,
+  EntityPrepare,
+} from "react-simple-game-engine/lib/export-types";
 
 import { InteractLayer } from "classes/interact-layer";
 import { KonvaManagerEntity } from "./konva-manager.entity";
@@ -12,7 +15,9 @@ import { Rect } from "konva/lib/shapes/Rect";
 import { Image } from "konva/lib/shapes/Image";
 import { permissionWriteFile } from "download";
 
-type Props = {};
+type Props = {
+  trashIcon: Avatar;
+};
 
 export class ShapeManagerEntity extends RectEntity<Props> {
   public trimExport: boolean = false;
@@ -43,7 +48,9 @@ export class ShapeManagerEntity extends RectEntity<Props> {
       this.worldManagement.getEntity(KonvaManagerEntity);
     this.viewportEntity = this.worldManagement.getEntity(ViewPortEntity);
     setTimeout(() => {
-      this.interactLayer = new InteractLayer();
+      this.interactLayer = new InteractLayer({
+        trashIcon: this.props.trashIcon.domImg,
+      });
       konvaManagerEntity.konvaRenderer.add(this.interactLayer);
 
       (window as any).export = () => {
@@ -86,6 +93,9 @@ export class ShapeManagerEntity extends RectEntity<Props> {
             image,
             draggable: true,
           });
+          (this.background as ShapeInput).onBeforeDestroy = () => {
+            this.background = null;
+          };
           this.background.setAttrs({ ...size });
           this.interactLayer.add(this.background);
         }
