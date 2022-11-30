@@ -198,7 +198,7 @@ export class InteractLayer extends LayerEZ {
       visible: false,
       name: "holder",
     });
-    this.originAdd(selectionRectangle);
+    this.add(selectionRectangle);
 
     let x1: number, y1: number, x2: number, y2: number;
     stage.on("mousedown touchstart", (e) => {
@@ -207,10 +207,10 @@ export class InteractLayer extends LayerEZ {
         return;
       }
       e.evt.preventDefault();
-      x1 = stage.getPointerPosition().x;
-      y1 = stage.getPointerPosition().y;
-      x2 = stage.getPointerPosition().x;
-      y2 = stage.getPointerPosition().y;
+      x1 = stage.getPointerPosition().x - this.renderer.width / 2;
+      y1 = stage.getPointerPosition().y - this.renderer.height / 2;
+      x2 = x1;
+      y2 = y1;
 
       selectionRectangle.visible(true);
       selectionRectangle.width(0);
@@ -223,8 +223,8 @@ export class InteractLayer extends LayerEZ {
         return;
       }
       e.evt.preventDefault();
-      x2 = stage.getPointerPosition().x;
-      y2 = stage.getPointerPosition().y;
+      x2 = stage.getPointerPosition().x - this.renderer.width / 2;
+      y2 = stage.getPointerPosition().y - this.renderer.height / 2;
 
       selectionRectangle.setAttrs({
         x: Math.min(x1, x2),
@@ -296,7 +296,9 @@ export class InteractLayer extends LayerEZ {
   }
 
   add(shape: Shape<ShapeConfig>) {
-    shape.name("selectable-shape");
+    if (!shape.name()) {
+      shape.name("selectable-shape");
+    }
     return super.add(shape);
   }
 }
