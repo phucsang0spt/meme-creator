@@ -18,10 +18,10 @@ import { Line } from "konva/lib/shapes/Line";
 type Props = {};
 
 export class ViewPortEntity extends RectEntity<Props> {
-  public readonly fixedResolution: Size = { width: 432, height: 768 };
+  public readonly fixedResolution: Size = { width: 396, height: 704 };
   public readonly basePosition: Point = {
     x: 0,
-    y: -50,
+    y: -90,
   };
   private description: Text;
   private staticLayer: StaticLayer;
@@ -116,7 +116,7 @@ export class ViewPortEntity extends RectEntity<Props> {
       x: 0,
       y: 0,
       stroke: "rgb(52, 152, 219)",
-      strokeWidth: 2,
+      strokeWidth: 3,
     });
     this.staticLayer.add(line);
     line.offset({ x: 0, y: 0 });

@@ -17,6 +17,7 @@ import { permissionWriteFile } from "download";
 
 type Props = {
   trashIcon: Avatar;
+  refreshIcon: Avatar;
 };
 
 export class ShapeManagerEntity extends RectEntity<Props> {
@@ -50,6 +51,7 @@ export class ShapeManagerEntity extends RectEntity<Props> {
     setTimeout(() => {
       this.interactLayer = new InteractLayer({
         trashIcon: this.props.trashIcon.domImg,
+        refreshIcon: this.props.refreshIcon.domImg,
       });
       konvaManagerEntity.konvaRenderer.add(this.interactLayer);
 
