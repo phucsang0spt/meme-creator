@@ -1,4 +1,5 @@
 import { useRef, useState } from "react";
+import { useConnectRender } from "use-connect-render";
 import styled from "styled-components";
 import { MdFileDownload } from "@react-icons/all-files/md/MdFileDownload";
 import { MdPictureInPictureAlt } from "@react-icons/all-files/md/MdPictureInPictureAlt";
@@ -11,14 +12,16 @@ import {
 
 import { ContextMode } from "enums";
 import { ContextModes } from "options";
-import { ShapeManagerEntity } from "entities/shape-manager.entity";
+
 import { MenuTab } from "components/menu-tab";
 import {
   BgSettingsPanel,
   BgSettingsPanelFuncs,
 } from "components/bg-settings.panel";
 import { Loading } from "components/loading";
-import { useConnectRender } from "use-connect-render/lib";
+import { Utilities } from "components/utilities";
+
+import { ShapeManagerEntity } from "entities/shape-manager.entity";
 
 const FloatIconSize = 30;
 
@@ -41,7 +44,7 @@ const Header = styled.header`
 
 const Footer = styled.footer`
   width: 100%;
-  height: calc(var(--vh) * 0.2);
+  height: calc(var(--vh) * 0.3);
   max-height: 162px;
   background-color: rgb(62, 62, 62);
   box-shadow: 0 -2px 5px 0.5px #00000077;
@@ -88,6 +91,13 @@ const FloatIcon = styled.span`
     line-height: ${FloatIconSize * 0.5}px;
     color: #fff;
   }
+`;
+
+const AdsBanner = styled.section`
+  width: 100%;
+  border-top: 1px solid #5e5e5e;
+  flex: 1;
+  min-height: 40px;
 `;
 
 type MenuTabCode = typeof ContextModes[0]["code"] | "export";
@@ -161,8 +171,8 @@ export function MainUI() {
         </CanvasRoot>
       </Main>
       <Footer>
-        {/* banner */}
-        <div />
+        <Utilities />
+        <AdsBanner />
       </Footer>
       <BgSettingsPanel ref={refBgSettingsPanel} />
       <Loading />

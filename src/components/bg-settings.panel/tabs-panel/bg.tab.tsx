@@ -3,6 +3,7 @@ import styled from "styled-components";
 
 import { GalleyMemeTemplates } from "components/gallery-meme-templates";
 import { LocalMemeTemplates } from "components/local-meme-templates";
+import { Scroll } from "components/scroll";
 
 const Root = styled.div`
   display: flex;
@@ -76,26 +77,6 @@ const Section = styled.section`
   min-height: 0;
   margin-top: 5px;
   padding-top: 5px;
-
-  overflow: scroll;
-  overflow-x: hidden;
-
-  /* width */
-  scrollbar {
-    width: 5px;
-  }
-
-  /* Track */
-  ::-webkit-scrollbar-track {
-    background: transparent;
-  }
-
-  /* Handle */
-  ::-webkit-scrollbar-thumb {
-    background: #4b4b4b;
-    border-radius: 3px;
-    box-shadow: 0 0 3px 0.1px #0000007a inset;
-  }
 `;
 
 enum BgMode {
@@ -119,11 +100,13 @@ export function BgTab() {
         />
       </HeaderTab>
       <Section>
-        {bgMode === BgMode.GALLERY ? (
-          <GalleyMemeTemplates />
-        ) : (
-          <LocalMemeTemplates />
-        )}
+        <Scroll>
+          {bgMode === BgMode.GALLERY ? (
+            <GalleyMemeTemplates />
+          ) : (
+            <LocalMemeTemplates />
+          )}
+        </Scroll>
       </Section>
     </Root>
   );
