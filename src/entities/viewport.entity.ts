@@ -115,8 +115,8 @@ export class ViewPortEntity extends RectEntity<Props> {
       ],
       x: 0,
       y: 0,
-      stroke: "rgb(52, 152, 219)",
-      strokeWidth: 3,
+      stroke: "rgb(52, 73, 94)",
+      strokeWidth: 2,
     });
     this.staticLayer.add(line);
     line.offset({ x: 0, y: 0 });
@@ -143,8 +143,8 @@ export class ViewPortEntity extends RectEntity<Props> {
     }
     const text = new Text({
       ...config,
-      fill: "rgb(33, 140, 78)",
-      fontSize: 16,
+      fill: "rgb(52, 73, 94)",
+      fontSize: 17,
       fontFamily: "Noto Sans JP",
     });
     text.x(text.x() - text.width() / 2);

@@ -16,10 +16,10 @@ const ToolStack = styled.div`
   display: inline-flex;
   align-items: center;
   border: 1px solid #292929;
+  color: #fff;
 
   > div {
-    cursor: pointer;
-    min-width: 50px;
+    min-width: ${100 / 6}vw;
     height: 40px;
 
     &:not(:last-child) {
