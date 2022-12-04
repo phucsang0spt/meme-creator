@@ -17,10 +17,18 @@ import { KonvaManagerEntity } from "entities/konva-manager.entity";
 
 import trashIcon from "assets/icons/trash.svg";
 import refreshIcon from "assets/icons/refresh.svg";
+import colorIcon from "assets/icons/color.svg";
+import empty from "assets/empty.png";
 
 @SceneTag("main")
 @SceneUI(MainUI)
 export class MainScene extends Scene<{}> {
+  @SpriteFrom(empty)
+  empty: Avatar;
+
+  @SpriteFrom(colorIcon)
+  colorIcon: Avatar;
+
   @SpriteFrom(trashIcon)
   trashIcon: Avatar;
 
@@ -40,6 +48,8 @@ export class MainScene extends Scene<{}> {
         ShapeManagerEntity,
         {
           props: {
+            empty: this.empty,
+            colorIcon: this.colorIcon,
             trashIcon: this.trashIcon,
             refreshIcon: this.refreshIcon,
           },

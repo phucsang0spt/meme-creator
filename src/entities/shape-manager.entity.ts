@@ -9,22 +9,25 @@ import {
 } from "react-simple-game-engine/lib/export-types";
 
 import { InteractLayer } from "classes/interact-layer";
+import { ImageEZ } from "classes/image.ez";
+
 import { KonvaManagerEntity } from "./konva-manager.entity";
 import { ViewPortEntity } from "./viewport.entity";
-import { Rect } from "konva/lib/shapes/Rect";
-import { Image } from "konva/lib/shapes/Image";
 import { permissionWriteFile } from "download";
+import { TextEZ } from "classes/text.ez";
 
 type Props = {
   trashIcon: Avatar;
   refreshIcon: Avatar;
+  colorIcon: Avatar;
+  empty: Avatar;
 };
 
 export class ShapeManagerEntity extends RectEntity<Props> {
   public trimExport: boolean = false;
   private interactLayer: InteractLayer;
   private viewportEntity: ViewPortEntity;
-  private background: Image;
+  private background: ImageEZ;
 
   protected onPrepare(): EntityPrepare<this> {
     return {
@@ -52,15 +55,13 @@ export class ShapeManagerEntity extends RectEntity<Props> {
       this.interactLayer = new InteractLayer({
         trashIcon: this.props.trashIcon.domImg,
         refreshIcon: this.props.refreshIcon.domImg,
+        colorIcon: this.props.colorIcon.domImg,
       });
       konvaManagerEntity.konvaRenderer.add(this.interactLayer);
 
-      (window as any).export = () => {
-        this.export();
-      };
-
-      (window as any).addRect = (pos: any = {}) => {
-        this.addRect(pos);
+      this.setBackground(this.props.empty.domImg.src);
+      (window as any).addText = () => {
+        this.addText();
       };
     }, 0);
   }
@@ -74,7 +75,7 @@ export class ShapeManagerEntity extends RectEntity<Props> {
 
   async setBackground(src: string) {
     return new Promise((res) => {
-      const image = new window.Image();
+      const image = new Image();
       image.onload = () => {
         const ratio = image.width / image.height;
         const size = {
@@ -83,17 +84,23 @@ export class ShapeManagerEntity extends RectEntity<Props> {
         };
         if (this.background) {
           this.background.image(image);
-          this.background.setAttrs({ ...size });
+          this.background.setAttrs({
+            ...size,
+            draggable: true,
+            name: "selectable-shape",
+            x: this.viewportEntity.basePosition.x,
+            y: this.viewportEntity.basePosition.y,
+          });
           this.background.offset({
             x: size.width / 2,
             y: size.height / 2,
           });
         } else {
-          this.background = new Image({
-            x: this.viewportEntity.basePosition.x,
-            y: this.viewportEntity.basePosition.y,
+          this.background = new ImageEZ({
+            width: 0,
+            height: 0,
             image,
-            draggable: true,
+            name: "empty",
           });
           (this.background as ShapeInput).onBeforeDestroy = () => {
             this.background = null;
@@ -108,15 +115,15 @@ export class ShapeManagerEntity extends RectEntity<Props> {
     });
   }
 
-  addRect(pos: any, color = "#39c") {
-    const rect = new Rect({
-      x: pos.x || 0,
-      y: pos.y || this.viewportEntity.position.y,
-      width: 100,
-      height: 100,
-      fill: color,
-      draggable: true,
+  addText() {
+    const text = new TextEZ({
+      x: this.viewportEntity.basePosition.x,
+      y: this.viewportEntity.basePosition.y,
+      text: "Hello EZ!!!",
+      fill: "rgb(52, 73, 94)",
+      fontSize: 19,
+      fontFamily: "Noto Sans JP",
     });
-    this.interactLayer.add(rect);
+    this.interactLayer.add(text);
   }
 }

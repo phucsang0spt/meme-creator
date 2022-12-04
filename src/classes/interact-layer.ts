@@ -2,7 +2,6 @@ import Konva from "konva";
 import { Group } from "konva/lib/Group";
 import { Node, NodeConfig } from "konva/lib/Node";
 import { Shape } from "konva/lib/Shape";
-import { Rect } from "konva/lib/shapes/Rect";
 import { Transformer } from "konva/lib/shapes/Transformer";
 
 import { ViewPortEntity } from "entities/viewport.entity";
@@ -10,20 +9,15 @@ import { ViewPortEntity } from "entities/viewport.entity";
 import { downloadFile } from "download";
 
 import { LayerEZ } from "./layer.ez";
-import { Image } from "konva/lib/shapes/Image";
-
-const ToolIconAttr = {
-  size: 24,
-  spacing: 20,
-};
 
 export class InteractLayer extends LayerEZ {
   private tr!: Transformer;
   private readonly toolStack: Record<string, Group> = {};
   constructor(
-    private readonly assets: {
+    public readonly assets: {
       trashIcon: HTMLImageElement;
       refreshIcon: HTMLImageElement;
+      colorIcon: HTMLImageElement;
     }
   ) {
     super();
@@ -93,10 +87,9 @@ export class InteractLayer extends LayerEZ {
     this.setTransformNodes([]);
   }
 
-  private removeTarget(target: ShapeInput) {
+  public removeTarget(target: ShapeWithUtilities) {
     this.unTransformTarget(target as Shape);
-    target.onBeforeDestroy?.();
-    target.destroy();
+    target.utilities.destroy();
   }
 
   private unTransformTarget(target: Shape) {
@@ -125,87 +118,11 @@ export class InteractLayer extends LayerEZ {
     for (const node of currentNodes) {
       const id = node._id.toString();
       if (!this.toolStack[id]) {
-        this.setupTransformTool(node as Shape);
+        this.toolStack[id] = (
+          node as ShapeWithUtilities
+        ).utilities.generateTransformTools();
       }
     }
-  }
-
-  private setupTransformTool(node: Shape) {
-    const id = node._id.toString();
-    const holderWidth = this.renderer.constrain(node.width(), 120, 150);
-    const holderHeight = 30;
-    const holderMarginTop = 40;
-    this.toolStack[id] = new Group({
-      x: node.x(),
-      y: node.y() + node.getClientRect().height / 2 + holderMarginTop,
-    });
-    const holder = new Rect({
-      x: 0,
-      y: 0,
-      offsetX: holderWidth / 2,
-      offsetY: holderHeight / 2,
-      width: holderWidth,
-      height: holderHeight,
-      fill: "whitesmoke",
-      stroke: "#39c",
-      strokeWidth: 1,
-      cornerRadius: 5,
-      name: "remover-holder",
-    });
-    const deleteBtn = new Image({
-      x: -ToolIconAttr.size / 2 - ToolIconAttr.spacing / 2,
-      y: 0,
-      offsetX: ToolIconAttr.size / 2,
-      offsetY: ToolIconAttr.size / 2,
-      image: this.assets.trashIcon,
-    });
-    const refreshBtn = new Image({
-      x: ToolIconAttr.spacing / 2 + ToolIconAttr.size / 2,
-      y: 0,
-      offsetX: ToolIconAttr.size / 2,
-      offsetY: ToolIconAttr.size / 2,
-      image: this.assets.refreshIcon,
-    });
-
-    refreshBtn.on("click tap", () => {
-      node.scale({ x: 1, y: 1 });
-      node.rotation(0);
-      if (this.toolStack[id]) {
-        this.toolStack[id].setAttrs({
-          x: node.x(),
-          y: node.y() + node.getClientRect().height / 2 + holderMarginTop,
-        });
-      }
-    });
-
-    deleteBtn.on("click tap", () => {
-      // delete shape
-      this.removeTarget(node as Shape);
-    });
-
-    this.toolStack[id].add(holder);
-    this.toolStack[id].add(deleteBtn);
-    this.toolStack[id].add(refreshBtn);
-    this.add(this.toolStack[id]);
-
-    node.on("transform", () => {
-      // update tool position when move
-      if (this.toolStack[id]) {
-        this.toolStack[id].setAttrs({
-          x: node.x(),
-          y: node.y() + node.getClientRect().height / 2 + holderMarginTop,
-        });
-      }
-    });
-    node.on("dragmove", () => {
-      // update tool position when move
-      if (this.toolStack[id]) {
-        this.toolStack[id].setAttrs({
-          x: node.x(),
-          y: node.y() + node.getClientRect().height / 2 + holderMarginTop,
-        });
-      }
-    });
   }
 
   private setupTransformer() {
@@ -443,6 +360,9 @@ export class InteractLayer extends LayerEZ {
       shape.toolable = true;
     }
 
-    return super.add(shape);
+    const addedShape = super.add(shape);
+
+    this.tr.moveToTop();
+    return addedShape;
   }
 }
