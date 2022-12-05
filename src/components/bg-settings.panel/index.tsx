@@ -1,68 +1,41 @@
-import { forwardRef, useImperativeHandle, useState } from "react";
-import styled, { css } from "styled-components";
+import { forwardRef, Ref, useState } from "react";
+import { MdPhotoSizeSelectActual } from "@react-icons/all-files/md/MdPhotoSizeSelectActual";
+import { MdSettings } from "@react-icons/all-files/md/MdSettings";
 
-import { TabsPanel } from "./tabs-panel";
+import { Drawer, DrawerFuncs } from "components/drawer";
+import { MenuTab } from "components/menu-tab";
 
-const Root = styled.div<{ isOpen: boolean }>`
-  z-index: 4;
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  top: 0;
-  color: #fff;
+import { BgTab } from "./bg.tab";
+import { SettingsTab } from "./settings.tab";
 
-  > div {
-    position: relative;
-    width: 100%;
-    height: 100%;
-  }
+enum SettingsMode {
+  BG,
+  SETTINGS,
+}
 
-  left: 100%;
-  transition: left 200ms ease-in-out;
-
-  ${({ isOpen }) =>
-    isOpen &&
-    css`
-      left: 0%;
-    `}
-`;
-
-const CloseSensor = styled.div`
-  position: absolute;
-  z-index: 1;
-  left: 0;
-  right: 0;
-  top: 0;
-  bottom: 0;
-`;
-
-export type BgSettingsPanelFuncs = {
-  open: () => void;
-};
-
-function BgSettingsPanelRef(_: any, ref: any) {
-  const [isOpen, setOpen] = useState(false);
-
-  useImperativeHandle(
-    ref,
-    () => ({
-      open: () => setOpen(true),
-    }),
-    []
+function _BgSettingsPanel(_: any, ref: Ref<DrawerFuncs>) {
+  const [settingsMode, setSettingsMode] = useState<SettingsMode>(
+    SettingsMode.BG
   );
-
   return (
-    <Root isOpen={isOpen}>
-      <div>
-        <CloseSensor
-          onClick={() => {
-            setOpen(false);
-          }}
+    <Drawer
+      ref={ref}
+      header={
+        <MenuTab
+          bottomDivider={false}
+          styleTheme="red"
+          selected={settingsMode}
+          onChange={setSettingsMode}
+          tabs={[
+            { code: SettingsMode.BG, label: <MdPhotoSizeSelectActual /> },
+            { code: SettingsMode.SETTINGS, label: <MdSettings /> },
+          ]}
         />
-        <TabsPanel />
-      </div>
-    </Root>
+      }
+    >
+      {settingsMode === SettingsMode.BG ? <BgTab /> : <SettingsTab />}
+    </Drawer>
   );
 }
 
-export const BgSettingsPanel = forwardRef(BgSettingsPanelRef);
+export const BgSettingsPanel = forwardRef(_BgSettingsPanel);

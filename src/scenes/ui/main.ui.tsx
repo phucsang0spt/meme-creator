@@ -14,14 +14,12 @@ import { ContextMode } from "enums";
 import { ContextModes } from "options";
 
 import { MenuTab } from "components/menu-tab";
-import {
-  BgSettingsPanel,
-  BgSettingsPanelFuncs,
-} from "components/bg-settings.panel";
+import { BgSettingsPanel } from "components/bg-settings.panel";
 import { Loading } from "components/loading";
 import { Utilities } from "components/utilities";
 
 import { ShapeManagerEntity } from "entities/shape-manager.entity";
+import { DrawerFuncs } from "components/drawer";
 
 const FloatIconSize = 30;
 
@@ -103,7 +101,7 @@ const AdsBanner = styled.section`
 type MenuTabCode = typeof ContextModes[0]["code"] | "export";
 export function MainUI() {
   const { push } = useConnectRender("loading");
-  const refBgSettingsPanel = useRef<BgSettingsPanelFuncs>();
+  const refBgSettingsPanel = useRef<DrawerFuncs>();
 
   const [shapeManagerEntity] = useEntity(ShapeManagerEntity);
 
