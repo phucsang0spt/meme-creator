@@ -24,7 +24,9 @@ export class ShapeUtilities {
     const group = new Group({
       x: shape.x(),
       y: shape.y() + shape.getClientRect().height / 2 + holderMarginTop,
+      name: "group-tool",
     });
+    (group as ShapeInput).toolable = false;
 
     const deleteBtn = new Image({
       y: 0,

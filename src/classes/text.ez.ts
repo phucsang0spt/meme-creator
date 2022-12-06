@@ -23,6 +23,12 @@ export class TextEZ extends Text implements WithUtilities {
     return ez;
   }
 
+  changeFontStyle(style: string) {
+    this.fontStyle(style);
+    this.offset({ x: this.width() / 2, y: this.height() / 2 });
+    return this;
+  }
+
   changeFontSize(size: number) {
     this.fontSize(size);
     this.offset({ x: this.width() / 2, y: this.height() / 2 });
