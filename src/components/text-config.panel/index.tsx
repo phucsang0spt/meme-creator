@@ -3,7 +3,7 @@ import { MdFormatColorText } from "@react-icons/all-files/md/MdFormatColorText";
 
 import { Drawer, DrawerFuncs } from "../drawer";
 import { MenuTab } from "../menu-tab";
-import { TextConfigContent } from "./content";
+import { TextConfigForm } from "./form";
 
 export const TextConfigPanel = forwardRef(function TextConfigPanel(
   _: any,
@@ -21,7 +21,7 @@ export const TextConfigPanel = forwardRef(function TextConfigPanel(
         />
       }
     >
-      <TextConfigContent />
+      <TextConfigForm />
     </Drawer>
   );
 });

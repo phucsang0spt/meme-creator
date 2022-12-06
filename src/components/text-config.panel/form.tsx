@@ -22,7 +22,7 @@ const fontStyleOptions = [
   },
 ];
 
-export function TextConfigContent() {
+export function TextConfigForm() {
   const data = useDrawerData<{ selectedText: TextEZ }>();
 
   const handleChangeContent = useCallback(
