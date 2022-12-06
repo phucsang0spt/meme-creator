@@ -25,7 +25,7 @@ type Props = {
 };
 
 export class ShapeManagerEntity extends RectEntity<Props> {
-  public trimExport: boolean = false;
+  public trimExport: boolean = true;
   private interactLayer: InteractLayer;
   private viewportEntity: ViewPortEntity;
   private background: ImageEZ;
