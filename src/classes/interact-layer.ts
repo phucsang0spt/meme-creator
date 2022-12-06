@@ -19,6 +19,8 @@ export class InteractLayer extends LayerEZ {
       trashIcon: HTMLImageElement;
       refreshIcon: HTMLImageElement;
       settingsIcon: HTMLImageElement;
+      layerDownIcon: HTMLImageElement;
+      layerUpIcon: HTMLImageElement;
     }
   ) {
     super();

@@ -18,6 +18,8 @@ import trashIcon from "assets/icons/trash.svg";
 import refreshIcon from "assets/icons/refresh.svg";
 import settingsIcon from "assets/icons/settings.svg";
 import copyIcon from "assets/icons/copy.svg";
+import layerDownIcon from "assets/icons/layer-down.svg";
+import layerUpIcon from "assets/icons/layer-up.svg";
 
 import empty from "assets/empty.png";
 
@@ -26,6 +28,12 @@ import empty from "assets/empty.png";
 export class MainScene extends Scene<{}> {
   @SpriteFrom(empty)
   empty: Avatar;
+
+  @SpriteFrom(layerDownIcon)
+  layerDownIcon: Avatar;
+
+  @SpriteFrom(layerUpIcon)
+  layerUpIcon: Avatar;
 
   @SpriteFrom(settingsIcon)
   settingsIcon: Avatar;
@@ -57,6 +65,8 @@ export class MainScene extends Scene<{}> {
             settingsIcon: this.settingsIcon,
             trashIcon: this.trashIcon,
             refreshIcon: this.refreshIcon,
+            layerDownIcon: this.layerDownIcon,
+            layerUpIcon: this.layerUpIcon,
           },
         },
       ]),

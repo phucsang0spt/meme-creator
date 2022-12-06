@@ -22,6 +22,8 @@ type Props = {
   trashIcon: Avatar;
   refreshIcon: Avatar;
   settingsIcon: Avatar;
+  layerDownIcon: Avatar;
+  layerUpIcon: Avatar;
   empty: Avatar;
 };
 
@@ -59,6 +61,8 @@ export class ShapeManagerEntity extends RectEntity<Props> {
         trashIcon: this.props.trashIcon.domImg,
         refreshIcon: this.props.refreshIcon.domImg,
         settingsIcon: this.props.settingsIcon.domImg,
+        layerDownIcon: this.props.layerDownIcon.domImg,
+        layerUpIcon: this.props.layerUpIcon.domImg,
       });
       konvaManagerEntity.konvaRenderer.add(this.interactLayer);
 

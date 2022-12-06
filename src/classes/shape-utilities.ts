@@ -28,6 +28,18 @@ export class ShapeUtilities {
     });
     (group as ShapeInput).toolable = false;
 
+    const moveUp = new Image({
+      y: 0,
+      offsetX: ToolIconAttr.size / 2,
+      offsetY: ToolIconAttr.size / 2,
+      image: layer.assets.layerUpIcon,
+    });
+    const moveDown = new Image({
+      y: 0,
+      offsetX: ToolIconAttr.size / 2,
+      offsetY: ToolIconAttr.size / 2,
+      image: layer.assets.layerDownIcon,
+    });
     const deleteBtn = new Image({
       y: 0,
       offsetX: ToolIconAttr.size / 2,
@@ -55,6 +67,19 @@ export class ShapeUtilities {
       layer.removeTarget(shape);
     });
 
+    moveDown.on("click tap", () => {
+      shape.moveDown();
+    });
+
+    moveUp.on("click tap", () => {
+      shape.moveUp();
+    });
+
+    deleteBtn.on("click tap", () => {
+      // delete shape
+      layer.removeTarget(shape);
+    });
+
     const tools = [
       deleteBtn,
       refreshBtn,
@@ -73,6 +98,7 @@ export class ShapeUtilities {
       });
       tools.push(duplicateBtn);
     }
+    tools.push(moveUp, moveDown);
 
     const holderWidth =
       ToolIconAttr.size * tools.length +
