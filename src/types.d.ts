@@ -4,7 +4,9 @@ declare interface Window {
 
 declare var Renderer: Window["Renderer"];
 
-type MemeTemplate = {
+type Picture = {
   id: string;
   src: string;
 };
+
+type MemeTemplate = Picture;

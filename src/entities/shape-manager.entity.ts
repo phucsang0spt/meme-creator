@@ -15,6 +15,7 @@ import { KonvaManagerEntity } from "./konva-manager.entity";
 import { ViewPortEntity } from "./viewport.entity";
 import { permissionWriteFile } from "download";
 import { TextEZ } from "classes/text.ez";
+import { createImage } from "utils";
 
 type Props = {
   copyIcon: Avatar;
@@ -73,55 +74,47 @@ export class ShapeManagerEntity extends RectEntity<Props> {
   }
 
   async setBackground(src: string) {
-    return new Promise((res) => {
-      const image = new Image();
-      image.onload = () => {
-        if (this.background) {
-          const ratio = image.width / image.height;
-          const size = {
-            width: this.viewportEntity.fixedResolution.width,
-            height: this.viewportEntity.fixedResolution.width / ratio,
-          };
-          this.background.image(image);
-          this.background.setAttrs({
-            ...size,
-            draggable: true,
-            name: "selectable-shape",
-            x: this.viewportEntity.basePosition.x,
-            y: this.viewportEntity.basePosition.y,
-          });
-          this.background.offset({
-            x: size.width / 2,
-            y: size.height / 2,
-          });
-        } else {
-          this.background = new ImageEZ({
-            x: 0,
-            y: 0,
-            width: 0,
-            height: 0,
-            image,
-            name: "empty",
-            fill: "red",
-          });
-          (this.background as ShapeInput).canDuplicate = false;
-          (this.background as ShapeInput).onBeforeDestroy = () => {
-            this.background = null;
-            this.setBackground(this.props.empty.domImg.src);
-          };
-          this.interactLayer.add(this.background);
-        }
-
-        this.background.moveToBottom();
-
-        res(null);
+    const image = await createImage(src);
+    if (this.background) {
+      const ratio = image.width / image.height;
+      const size = {
+        width: this.viewportEntity.fixedResolution.width,
+        height: this.viewportEntity.fixedResolution.width / ratio,
       };
-      image.src = src;
-    });
+      this.background.image(image);
+      this.background.setAttrs({
+        ...size,
+        draggable: true,
+        name: "selectable-shape",
+        x: this.viewportEntity.basePosition.x,
+        y: this.viewportEntity.basePosition.y,
+      });
+      this.background.offset({
+        x: size.width / 2,
+        y: size.height / 2,
+      });
+    } else {
+      this.background = new ImageEZ({
+        x: 0,
+        y: 0,
+        width: 0,
+        height: 0,
+        image,
+        name: "empty",
+      });
+      (this.background as ShapeInput).canDuplicate = false;
+      (this.background as ShapeInput).onBeforeDestroy = () => {
+        this.background = null;
+        this.setBackground(this.props.empty.domImg.src);
+      };
+      this.interactLayer.add(this.background);
+    }
+
+    this.background.moveToBottom();
   }
 
   addText() {
-    const text = new TextEZ({
+    const ez = new TextEZ({
       x: this.viewportEntity.basePosition.x,
       y: this.viewportEntity.basePosition.y,
       text: "Hello EZ!!!",
@@ -130,7 +123,24 @@ export class ShapeManagerEntity extends RectEntity<Props> {
       fontStyle: "bold",
       fontFamily: "Noto Sans",
     });
-    this.interactLayer.add(text);
-    return text;
+    this.interactLayer.add(ez);
+    return ez;
+  }
+
+  async addImage(src: string) {
+    const image = await createImage(src);
+    const ratio = image.width / image.height;
+    const size = {
+      width: 120,
+      height: 120 / ratio,
+    };
+    const ez = new ImageEZ({
+      x: this.viewportEntity.basePosition.x,
+      y: this.viewportEntity.basePosition.y,
+      ...size,
+      image,
+    });
+    this.interactLayer.add(ez);
+    return ez;
   }
 }

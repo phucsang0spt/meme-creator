@@ -17,10 +17,12 @@ import { ShapeManagerEntity } from "entities/shape-manager.entity";
 
 import { DrawerFuncs } from "components/drawer";
 import { MenuTab } from "components/menu-tab";
-import { BgSettingsPanel } from "components/bg-settings.panel";
 import { Loading } from "components/loading";
 import { Utilities } from "components/utilities";
+
+import { BgSettingsPanel } from "components/bg-settings.panel";
 import { TextConfigPanel } from "components/text-config.panel";
+import { ExtraImagePanel } from "components/extra-image.panel";
 
 const FloatIconSize = 30;
 
@@ -104,6 +106,7 @@ export function MainUI() {
   const { push } = useConnectRender("loading");
   const refBgSettingsPanel = useRef<DrawerFuncs>();
   const refTextConfigPanel = useRef<DrawerFuncs>();
+  const refExtraImagePanel = useRef<DrawerFuncs>();
 
   const [shapeManagerEntity] = useEntity(ShapeManagerEntity);
 
@@ -117,6 +120,8 @@ export function MainUI() {
       shapeManagerEntity.addText().onShowSettings = (text) => {
         refTextConfigPanel.current!.open({ selectedText: text });
       };
+    } else if (code === UtilitiesCode.IMAGE) {
+      refExtraImagePanel.current!.open();
     }
   };
   return (
@@ -183,6 +188,7 @@ export function MainUI() {
       </Footer>
       <BgSettingsPanel ref={refBgSettingsPanel} />
       <TextConfigPanel ref={refTextConfigPanel} />
+      <ExtraImagePanel ref={refExtraImagePanel} />
       <Loading />
     </Root>
   );

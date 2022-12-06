@@ -71,10 +71,7 @@ type GridPicProps = {
   shake?: boolean;
   column?: number;
   loading?: boolean;
-  data: {
-    id: string;
-    src: string;
-  }[];
+  data: Picture[];
   onSelect?: (template: GridPicProps["data"][0]) => void;
 };
 export function GridPic({

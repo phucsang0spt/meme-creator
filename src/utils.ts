@@ -32,3 +32,13 @@ export function fileToBase64(file: File): Promise<string> {
     reader.onerror = (error) => reject(error);
   });
 }
+
+export async function createImage(src: string): Promise<HTMLImageElement> {
+  return new Promise((res) => {
+    const image = new Image();
+    image.onload = () => {
+      res(image);
+    };
+    image.src = src;
+  });
+}
