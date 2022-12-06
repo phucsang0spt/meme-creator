@@ -31,10 +31,9 @@ export class InteractLayer extends LayerEZ {
     let left: number, right: number;
     let top: number, bottom: number;
     const shapes = this.iterativeShapes((shape) => {
+      const { width: shapeWidth, height: shapeHeight } = shape.getClientRect();
       const shapeX = shape.x();
       const shapeY = shape.y();
-      const shapeWidth = shape.width();
-      const shapeHeight = shape.height();
 
       const shapeLeft = shapeX - shapeWidth / 2;
       const shapeRight = shapeX + shapeWidth / 2;
