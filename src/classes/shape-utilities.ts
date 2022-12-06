@@ -91,7 +91,7 @@ export class ShapeUtilities {
       width: 25 + holderWidth + 25,
       height: holderHeight,
       fill: "whitesmoke",
-      stroke: "#39c",
+      stroke: "rgb(62, 62, 62)",
       strokeWidth: 1,
       cornerRadius: 5,
       name: "remover-holder",

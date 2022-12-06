@@ -115,7 +115,7 @@ export class ViewPortEntity extends RectEntity<Props> {
       ],
       x: 0,
       y: 0,
-      stroke: "rgb(52, 73, 94)",
+      stroke: "#2980b9",
       strokeWidth: 2,
     });
     this.staticLayer.add(line);
@@ -143,9 +143,9 @@ export class ViewPortEntity extends RectEntity<Props> {
     }
     const text = new Text({
       ...config,
-      fill: "rgb(52, 73, 94)",
+      fill: "#fff",
       fontSize: 17,
-      fontFamily: "Noto Sans JP",
+      fontFamily: "Noto Sans",
     });
     text.x(text.x() - text.width() / 2);
     text.y(text.y() - text.height() / 2 - 5);

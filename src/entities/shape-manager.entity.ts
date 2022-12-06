@@ -108,9 +108,8 @@ export class ShapeManagerEntity extends RectEntity<Props> {
         this.setBackground(this.props.empty.domImg.src);
       };
       this.interactLayer.add(this.background);
+      this.background.moveToBottom();
     }
-
-    this.background.moveToBottom();
   }
 
   addText() {
@@ -118,7 +117,7 @@ export class ShapeManagerEntity extends RectEntity<Props> {
       x: this.viewportEntity.basePosition.x,
       y: this.viewportEntity.basePosition.y,
       text: "Hello EZ!!!",
-      fill: "rgb(52, 73, 94)",
+      fill: "#fff",
       fontSize: 29,
       fontStyle: "bold",
       fontFamily: "Noto Sans",

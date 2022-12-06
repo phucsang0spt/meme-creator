@@ -12,13 +12,12 @@ const SIZE = 20;
 export class BackgroundEntity extends RectEntity<Props> {
   private amountOfVerticalLine = 0;
   private amountOfHorizontalLine = 0;
-  private t = 255;
   protected onPrepare(): EntityPrepare<this> {
     return {
       sprite: new LogicComponent([
         ColorSprite,
         {
-          source: [245, 245, 245],
+          source: [44, 62, 80],
         },
       ]),
       transform: {
@@ -34,17 +33,6 @@ export class BackgroundEntity extends RectEntity<Props> {
   onActive() {
     this.amountOfVerticalLine = Math.ceil(this.sprite.width / SIZE);
     this.amountOfHorizontalLine = Math.ceil(this.sprite.height / SIZE);
-    // this.scaleX = 0.5;
-    // this.scaleY = 0.5;
-
-    (window as any).hideBackground = () => {
-      this.sprite.source = [0, 0, 0, 0];
-      this.t = 0;
-    };
-    (window as any).showBackground = () => {
-      this.sprite.source = [245, 245, 245];
-      this.t = 255;
-    };
   }
 
   onDraw() {
@@ -52,7 +40,7 @@ export class BackgroundEntity extends RectEntity<Props> {
 
     this.renderer.drawHandle(this.position, () => {
       this.renderer.scale(this.scaleX, this.scaleY);
-      this.renderer.stroke(31, 128, 232, this.t);
+      this.renderer.stroke(52, 73, 94, 255);
       Array.from({ length: this.amountOfVerticalLine }).forEach((_, i) => {
         if (i !== 0 && i !== this.amountOfVerticalLine - 1) {
           const x = left + i * SIZE;
