@@ -58,6 +58,19 @@ export class ShapeUtilities {
       refreshBtn,
       ...(shape.getTransformTools?.(layer.assets) || []),
     ];
+    if ((shape as ShapeInput).canDuplicate) {
+      const duplicateBtn = new Image({
+        y: 0,
+        offsetX: ToolIconAttr.size / 2,
+        offsetY: ToolIconAttr.size / 2,
+        image: layer.assets.copyIcon,
+      });
+
+      duplicateBtn.on("click tap", () => {
+        layer.add(shape.clone());
+      });
+      tools.push(duplicateBtn);
+    }
 
     const holderWidth =
       ToolIconAttr.size * tools.length +

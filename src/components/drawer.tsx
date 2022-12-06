@@ -1,4 +1,5 @@
 import {
+  createContext,
   forwardRef,
   ReactNode,
   Ref,
@@ -52,7 +53,7 @@ const Section = styled.section`
   transform: translateX(-100%);
   border-left: 2px solid #29292940;
   border-bottom: 2px solid #29292940;
-  background-color: rgb(62, 62, 62);
+  background-color: rgb(62, 62, 62, 0.9);
   border-top-left-radius: 2px;
   border-bottom-left-radius: 2px;
   display: flex;
@@ -71,37 +72,74 @@ const Section = styled.section`
     line-height: 1rem;
   }
 `;
+
+type DrawerData = Record<string, any>;
+
 export type DrawerFuncs = {
-  open: () => void;
+  open: (data?: DrawerData) => void;
 };
+
+export const DrawerDataContext = createContext<DrawerData>(undefined);
 
 type DrawerProps = {
   header?: ReactNode;
   children: ReactNode;
+  defaultOpen?: DrawerData | boolean;
 };
-const _Drawer = ({ header, children }: DrawerProps, ref: Ref<DrawerFuncs>) => {
-  const [isOpen, setOpen] = useState(false);
+const _Drawer = (
+  { header, children, defaultOpen = false }: DrawerProps,
+  ref: Ref<DrawerFuncs>
+) => {
+  const [present, setPresent] = useState({
+    isOpen: !!defaultOpen,
+    data:
+      typeof defaultOpen === "boolean"
+        ? defaultOpen
+          ? {}
+          : undefined
+        : defaultOpen,
+  });
+  const [mountContent, setMountContent] = useState(!!defaultOpen);
 
   useImperativeHandle(
     ref,
     () => ({
-      open: () => setOpen(true),
+      open: (data: Record<string, any> = {}) => {
+        setPresent({
+          isOpen: true,
+          data,
+        });
+        setMountContent(true);
+      },
     }),
     []
   );
 
   return (
-    <Root isOpen={isOpen}>
+    <Root
+      isOpen={present.isOpen}
+      onTransitionEnd={() => {
+        // closed after transition
+        if (!present.isOpen) {
+          setMountContent(false);
+          setPresent((prev) => ({ ...prev, data: undefined }));
+        }
+      }}
+    >
       <div>
         <CloseSensor
           onClick={() => {
-            setOpen(false);
+            setPresent((prev) => ({ ...prev, isOpen: false }));
           }}
         />
-        <Section>
-          <div>{header}</div>
-          <main>{children}</main>
-        </Section>
+        {mountContent && (
+          <Section>
+            <DrawerDataContext.Provider value={present.data}>
+              <div>{header}</div>
+              <main>{children}</main>
+            </DrawerDataContext.Provider>
+          </Section>
+        )}
       </div>
     </Root>
   );

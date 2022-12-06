@@ -17,9 +17,10 @@ import { permissionWriteFile } from "download";
 import { TextEZ } from "classes/text.ez";
 
 type Props = {
+  copyIcon: Avatar;
   trashIcon: Avatar;
   refreshIcon: Avatar;
-  colorIcon: Avatar;
+  settingsIcon: Avatar;
   empty: Avatar;
 };
 
@@ -53,16 +54,14 @@ export class ShapeManagerEntity extends RectEntity<Props> {
     this.viewportEntity = this.worldManagement.getEntity(ViewPortEntity);
     setTimeout(() => {
       this.interactLayer = new InteractLayer({
+        copyIcon: this.props.copyIcon.domImg,
         trashIcon: this.props.trashIcon.domImg,
         refreshIcon: this.props.refreshIcon.domImg,
-        colorIcon: this.props.colorIcon.domImg,
+        settingsIcon: this.props.settingsIcon.domImg,
       });
       konvaManagerEntity.konvaRenderer.add(this.interactLayer);
 
       this.setBackground(this.props.empty.domImg.src);
-      (window as any).addText = () => {
-        this.addText();
-      };
     }, 0);
   }
 
@@ -77,12 +76,12 @@ export class ShapeManagerEntity extends RectEntity<Props> {
     return new Promise((res) => {
       const image = new Image();
       image.onload = () => {
-        const ratio = image.width / image.height;
-        const size = {
-          width: this.viewportEntity.fixedResolution.width,
-          height: this.viewportEntity.fixedResolution.width / ratio,
-        };
         if (this.background) {
+          const ratio = image.width / image.height;
+          const size = {
+            width: this.viewportEntity.fixedResolution.width,
+            height: this.viewportEntity.fixedResolution.width / ratio,
+          };
           this.background.image(image);
           this.background.setAttrs({
             ...size,
@@ -97,17 +96,23 @@ export class ShapeManagerEntity extends RectEntity<Props> {
           });
         } else {
           this.background = new ImageEZ({
+            x: 0,
+            y: 0,
             width: 0,
             height: 0,
             image,
             name: "empty",
+            fill: "red",
           });
+          (this.background as ShapeInput).canDuplicate = false;
           (this.background as ShapeInput).onBeforeDestroy = () => {
             this.background = null;
+            this.setBackground(this.props.empty.domImg.src);
           };
-          this.background.setAttrs({ ...size });
           this.interactLayer.add(this.background);
         }
+
+        this.background.moveToBottom();
 
         res(null);
       };
@@ -121,9 +126,11 @@ export class ShapeManagerEntity extends RectEntity<Props> {
       y: this.viewportEntity.basePosition.y,
       text: "Hello EZ!!!",
       fill: "rgb(52, 73, 94)",
-      fontSize: 19,
-      fontFamily: "Noto Sans JP",
+      fontSize: 29,
+      fontStyle: "bold",
+      fontFamily: "Noto Sans",
     });
     this.interactLayer.add(text);
+    return text;
   }
 }

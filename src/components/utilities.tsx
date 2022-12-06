@@ -6,6 +6,7 @@ import { FiSmile } from "@react-icons/all-files/fi/FiSmile";
 import { FiSlash } from "@react-icons/all-files/fi/FiSlash";
 
 import { Scroll } from "./scroll";
+import { UtilitiesCode } from "enums";
 
 const Root = styled.div`
   width: 100%;
@@ -40,21 +41,25 @@ const ToolStack = styled.div`
     }
   }
 `;
-export function Utilities() {
+
+type UtilitiesProps = {
+  onSelect: (code: UtilitiesCode) => void;
+};
+export function Utilities({ onSelect }: UtilitiesProps) {
   return (
     <Root>
       <Scroll dir="hoz">
         <ToolStack>
-          <div>
+          <div onClick={() => onSelect(UtilitiesCode.TEXT)}>
             <FiType />
           </div>
-          <div>
+          <div onClick={() => onSelect(UtilitiesCode.TEXT)}>
             <FiImage />
           </div>
-          <div>
+          <div onClick={() => onSelect(UtilitiesCode.TEXT)}>
             <FiMessageSquare />
           </div>
-          <div>
+          <div onClick={() => onSelect(UtilitiesCode.TEXT)}>
             <FiSmile />
           </div>
 

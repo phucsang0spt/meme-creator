@@ -15,9 +15,10 @@ export class InteractLayer extends LayerEZ {
   private readonly toolStack: Record<string, Group> = {};
   constructor(
     public readonly assets: {
+      copyIcon: HTMLImageElement;
       trashIcon: HTMLImageElement;
       refreshIcon: HTMLImageElement;
-      colorIcon: HTMLImageElement;
+      settingsIcon: HTMLImageElement;
     }
   ) {
     super();
@@ -192,7 +193,6 @@ export class InteractLayer extends LayerEZ {
       this.setTransformNodes(selected);
     });
 
-    // clicks should select/deselect shapes
     stage.on("click tap", (e) => {
       // if we are selecting with rect, do nothing
       if (selectionRectangle.visible()) {
@@ -358,6 +358,9 @@ export class InteractLayer extends LayerEZ {
     }
     if (shape.toolable == null) {
       shape.toolable = true;
+    }
+    if (shape.canDuplicate == null) {
+      shape.canDuplicate = true;
     }
 
     const addedShape = super.add(shape);

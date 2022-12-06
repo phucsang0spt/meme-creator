@@ -3,6 +3,7 @@ type ShapeInput = (
   | import("konva/lib/Group").Group
 ) & {
   toolable?: boolean;
+  canDuplicate?: boolean;
   onBeforeDestroy?: () => void;
 };
 

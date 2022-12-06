@@ -3,3 +3,8 @@ export enum ContextMode {
   GIF,
   VIDEO,
 }
+
+export enum UtilitiesCode {
+  TEXT = "text",
+  IMAGE = "image",
+}

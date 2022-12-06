@@ -132,7 +132,7 @@ type MenuTabProps<C> = {
   styleTheme?: "red" | "blue";
   tabs: Tab<C>[];
   selected: C;
-  onChange: (code: Tab<C>["code"]) => void;
+  onChange?: (code: Tab<C>["code"]) => void;
 };
 export function MenuTab<C extends any = string | number>({
   bottomDivider = true,
@@ -147,7 +147,7 @@ export function MenuTab<C extends any = string | number>({
         {tabs.map(({ code, label, disabled = false }) => (
           <li
             key={code as string}
-            onClick={() => !disabled && onChange(code)}
+            onClick={() => !disabled && onChange?.(code)}
             data-disabled={disabled}
             data-state={selected === code && "active"}
           >

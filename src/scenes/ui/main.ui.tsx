@@ -10,16 +10,17 @@ import {
   useScaleContainer,
 } from "react-simple-game-engine/lib/utilities";
 
-import { ContextMode } from "enums";
+import { ContextMode, UtilitiesCode } from "enums";
 import { ContextModes } from "options";
 
+import { ShapeManagerEntity } from "entities/shape-manager.entity";
+
+import { DrawerFuncs } from "components/drawer";
 import { MenuTab } from "components/menu-tab";
 import { BgSettingsPanel } from "components/bg-settings.panel";
 import { Loading } from "components/loading";
 import { Utilities } from "components/utilities";
-
-import { ShapeManagerEntity } from "entities/shape-manager.entity";
-import { DrawerFuncs } from "components/drawer";
+import { TextConfigPanel } from "components/text-config.panel";
 
 const FloatIconSize = 30;
 
@@ -102,6 +103,7 @@ type MenuTabCode = typeof ContextModes[0]["code"] | "export";
 export function MainUI() {
   const { push } = useConnectRender("loading");
   const refBgSettingsPanel = useRef<DrawerFuncs>();
+  const refTextConfigPanel = useRef<DrawerFuncs>();
 
   const [shapeManagerEntity] = useEntity(ShapeManagerEntity);
 
@@ -110,6 +112,13 @@ export function MainUI() {
   );
   const ScaleContainer = useScaleContainer();
 
+  const handleSelectUtilities = (code: UtilitiesCode) => {
+    if (code === UtilitiesCode.TEXT) {
+      shapeManagerEntity.addText().onShowSettings = (text) => {
+        refTextConfigPanel.current!.open({ selectedText: text });
+      };
+    }
+  };
   return (
     <Root>
       <Header>
@@ -169,10 +178,11 @@ export function MainUI() {
         </CanvasRoot>
       </Main>
       <Footer>
-        <Utilities />
+        <Utilities onSelect={handleSelectUtilities} />
         <AdsBanner />
       </Footer>
       <BgSettingsPanel ref={refBgSettingsPanel} />
+      <TextConfigPanel ref={refTextConfigPanel} />
       <Loading />
     </Root>
   );

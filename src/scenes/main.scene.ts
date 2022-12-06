@@ -3,7 +3,6 @@ import {
   Scene,
   SceneTag,
   SceneUI,
-  SimpleCamera,
   SpriteFrom,
 } from "react-simple-game-engine";
 import { type Avatar } from "react-simple-game-engine/lib/export-types";
@@ -17,7 +16,9 @@ import { KonvaManagerEntity } from "entities/konva-manager.entity";
 
 import trashIcon from "assets/icons/trash.svg";
 import refreshIcon from "assets/icons/refresh.svg";
-import colorIcon from "assets/icons/color.svg";
+import settingsIcon from "assets/icons/settings.svg";
+import copyIcon from "assets/icons/copy.svg";
+
 import empty from "assets/empty.png";
 
 @SceneTag("main")
@@ -26,19 +27,22 @@ export class MainScene extends Scene<{}> {
   @SpriteFrom(empty)
   empty: Avatar;
 
-  @SpriteFrom(colorIcon)
-  colorIcon: Avatar;
+  @SpriteFrom(settingsIcon)
+  settingsIcon: Avatar;
 
   @SpriteFrom(trashIcon)
   trashIcon: Avatar;
 
+  @SpriteFrom(copyIcon)
+  copyIcon: Avatar;
+
   @SpriteFrom(refreshIcon)
   refreshIcon: Avatar;
 
-  protected onBootstrapDone(simpleCamera: SimpleCamera) {
-    (window as any).simpleCamera = simpleCamera;
-    // simpleCamera.x += 90;
-  }
+  // protected onBootstrapDone(simpleCamera: SimpleCamera) {
+  //   (window as any).simpleCamera = simpleCamera;
+  //   // simpleCamera.x += 90;
+  // }
 
   getComponents() {
     return [
@@ -49,7 +53,8 @@ export class MainScene extends Scene<{}> {
         {
           props: {
             empty: this.empty,
-            colorIcon: this.colorIcon,
+            copyIcon: this.copyIcon,
+            settingsIcon: this.settingsIcon,
             trashIcon: this.trashIcon,
             refreshIcon: this.refreshIcon,
           },
