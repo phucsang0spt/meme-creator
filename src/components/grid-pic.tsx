@@ -41,7 +41,6 @@ const Root = styled.div<{
     /* width: 40px; */
     /* height: 40px; */
     border: 1px solid ${({ shake }) => (shake ? "#e74c3c" : "#5e5e5e")};
-    cursor: pointer;
   }
 
   ${({ shake }) =>

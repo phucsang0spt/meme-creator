@@ -27,7 +27,6 @@ const ChooseFileBtn = styled.div`
 
   > label,
   > section {
-    cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
