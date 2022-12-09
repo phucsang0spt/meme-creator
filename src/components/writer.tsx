@@ -3,6 +3,7 @@ import styled from "styled-components";
 import { useDebounce } from "use-debounce";
 
 const Root = styled.input`
+  color: #fff;
   background: #3e3e3e;
   border-radius: 3px;
   border: 1px solid #5e5e5e;

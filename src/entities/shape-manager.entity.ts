@@ -65,8 +65,6 @@ export class ShapeManagerEntity extends RectEntity<Props> {
         layerUpIcon: this.props.layerUpIcon.domImg,
       });
       konvaManagerEntity.konvaRenderer.add(this.interactLayer);
-
-      this.setBackground(this.props.empty.domImg.src);
     }, 0);
   }
 
@@ -79,41 +77,36 @@ export class ShapeManagerEntity extends RectEntity<Props> {
 
   async setBackground(src: string) {
     const image = await createImage(src);
+    const ratio = image.width / image.height;
+    const size = {
+      width: this.viewportEntity.fixedResolution.width,
+      height: this.viewportEntity.fixedResolution.width / ratio,
+    };
     if (this.background) {
-      const ratio = image.width / image.height;
-      const size = {
-        width: this.viewportEntity.fixedResolution.width,
-        height: this.viewportEntity.fixedResolution.width / ratio,
-      };
       this.background.image(image);
       this.background.setAttrs({
         ...size,
         draggable: true,
-        name: "selectable-shape",
-        x: this.viewportEntity.basePosition.x,
-        y: this.viewportEntity.basePosition.y,
-      });
-      this.background.offset({
-        x: size.width / 2,
-        y: size.height / 2,
       });
     } else {
       this.background = new ImageEZ({
-        x: 0,
-        y: 0,
-        width: 0,
-        height: 0,
+        x: this.viewportEntity.basePosition.x,
+        y: this.viewportEntity.basePosition.y,
+        ...size,
         image,
-        name: "empty",
+        name: "selectable-shape",
       });
       (this.background as ShapeInput).canDuplicate = false;
       (this.background as ShapeInput).onBeforeDestroy = () => {
         this.background = null;
-        this.setBackground(this.props.empty.domImg.src);
       };
       this.interactLayer.add(this.background);
       this.background.moveToBottom();
     }
+    this.background.offset({
+      x: size.width / 2,
+      y: size.height / 2,
+    });
   }
 
   addText() {

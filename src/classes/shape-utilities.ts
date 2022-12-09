@@ -4,8 +4,8 @@ import { Rect } from "konva/lib/shapes/Rect";
 import { InteractLayer } from "./interact-layer";
 
 export const ToolIconAttr = {
-  size: 24,
-  spacing: 20,
+  size: 12,
+  spacing: 10,
 };
 
 export class ShapeUtilities {
@@ -17,10 +17,21 @@ export class ShapeUtilities {
   }
 
   generateTransformTools() {
+    const iconSize = Renderer.constrainMax(
+      ToolIconAttr.size * Renderer.pixelDensity(),
+      40
+    );
+    const iconSpacing = Renderer.constrainMax(
+      ToolIconAttr.spacing * Renderer.pixelDensity(),
+      45
+    );
     const shape = this.shape as ShapeWithUtilities;
     const layer = shape.getLayer() as InteractLayer;
-    const holderHeight = 30;
-    const holderMarginTop = 40;
+    const holderHeight = 10 + iconSize + 10;
+    const holderMarginTop = Renderer.constrainMax(
+      25 * Renderer.pixelDensity(),
+      65
+    );
     const group = new Group({
       x: shape.x(),
       y: shape.y() + shape.getClientRect().height / 2 + holderMarginTop,
@@ -30,27 +41,35 @@ export class ShapeUtilities {
 
     const moveUp = new Image({
       y: 0,
-      offsetX: ToolIconAttr.size / 2,
-      offsetY: ToolIconAttr.size / 2,
+      offsetX: iconSize / 2,
+      offsetY: iconSize / 2,
+      width: iconSize,
+      height: iconSize,
       image: layer.assets.layerUpIcon,
     });
     const moveDown = new Image({
       y: 0,
-      offsetX: ToolIconAttr.size / 2,
-      offsetY: ToolIconAttr.size / 2,
+      offsetX: iconSize / 2,
+      offsetY: iconSize / 2,
+      width: iconSize,
+      height: iconSize,
       image: layer.assets.layerDownIcon,
     });
     const deleteBtn = new Image({
       y: 0,
-      offsetX: ToolIconAttr.size / 2,
-      offsetY: ToolIconAttr.size / 2,
+      offsetX: iconSize / 2,
+      offsetY: iconSize / 2,
       image: layer.assets.trashIcon,
+      width: iconSize,
+      height: iconSize,
     });
     const refreshBtn = new Image({
       y: 0,
-      offsetX: ToolIconAttr.size / 2,
-      offsetY: ToolIconAttr.size / 2,
+      offsetX: iconSize / 2,
+      offsetY: iconSize / 2,
       image: layer.assets.refreshIcon,
+      width: iconSize,
+      height: iconSize,
     });
 
     refreshBtn.on("click tap", () => {
@@ -88,9 +107,11 @@ export class ShapeUtilities {
     if ((shape as ShapeInput).canDuplicate) {
       const duplicateBtn = new Image({
         y: 0,
-        offsetX: ToolIconAttr.size / 2,
-        offsetY: ToolIconAttr.size / 2,
+        offsetX: iconSize / 2,
+        offsetY: iconSize / 2,
         image: layer.assets.copyIcon,
+        width: iconSize,
+        height: iconSize,
       });
 
       duplicateBtn.on("click tap", () => {
@@ -101,13 +122,12 @@ export class ShapeUtilities {
     tools.push(moveUp, moveDown);
 
     const holderWidth =
-      ToolIconAttr.size * tools.length +
-      (tools.length - 1) * ToolIconAttr.spacing;
+      iconSize * tools.length + (tools.length - 1) * iconSpacing;
 
-    const left = 0 - holderWidth / 2 + ToolIconAttr.size / 2;
+    const left = 0 - holderWidth / 2 + iconSize / 2;
 
     tools.forEach((tool, i) => {
-      tool.x(left + i * (ToolIconAttr.size + ToolIconAttr.spacing));
+      tool.x(left + i * (iconSize + iconSpacing));
     });
     const holder = new Rect({
       x: 0,

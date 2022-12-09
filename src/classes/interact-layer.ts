@@ -131,74 +131,9 @@ export class InteractLayer extends LayerEZ {
     const stage = this.getStage();
     this.tr = new Konva.Transformer();
     this.originAdd(this.tr);
-    // add a new feature, lets add ability to draw selection rectangle
-    const selectionRectangle = new Konva.Rect({
-      fill: "rgba(0,0,255,0.5)",
-      visible: false,
-      name: "holder",
-    });
-    this.add(selectionRectangle);
-
-    let x1: number, y1: number, x2: number, y2: number;
-    stage.on("mousedown touchstart", (e) => {
-      // do nothing if we mousedown on any shape
-      if (e.target !== stage) {
-        return;
-      }
-      e.evt.preventDefault();
-      const { x: pntX, y: pntY } = this.getPointerPosition();
-      x1 = pntX;
-      y1 = pntY;
-      x2 = x1;
-      y2 = y1;
-
-      selectionRectangle.visible(true);
-      selectionRectangle.width(0);
-      selectionRectangle.height(0);
-    });
-
-    stage.on("mousemove touchmove", (e) => {
-      // do nothing if we didn't start selection
-      if (!selectionRectangle.visible()) {
-        return;
-      }
-      e.evt.preventDefault();
-      const { x: pntX, y: pntY } = this.getPointerPosition();
-      x2 = pntX;
-      y2 = pntY;
-
-      selectionRectangle.setAttrs({
-        x: Math.min(x1, x2),
-        y: Math.min(y1, y2),
-        width: Math.abs(x2 - x1),
-        height: Math.abs(y2 - y1),
-      });
-    });
-
-    stage.on("mouseup touchend", (e) => {
-      // do nothing if we didn't start selection
-      if (!selectionRectangle.visible()) {
-        return;
-      }
-      e.evt.preventDefault();
-      // update visibility in timeout, so we can check it in click event
-      setTimeout(() => {
-        selectionRectangle.visible(false);
-      });
-
-      var shapes = stage.find(".selectable-shape");
-      var box = selectionRectangle.getClientRect();
-      var selected = shapes.filter((shape) =>
-        Konva.Util.haveIntersection(box, shape.getClientRect())
-      );
-      this.setTransformNodes(selected);
-    });
+  
 
     stage.on("click tap", (e) => {
-      // if we are selecting with rect, do nothing
-      if (selectionRectangle.visible()) {
-        return;
-      }
       const target = e.target;
 
       // if click on empty area - remove all selections

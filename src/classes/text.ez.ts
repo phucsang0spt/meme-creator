@@ -42,12 +42,16 @@ export class TextEZ extends Text implements WithUtilities {
   }
 
   getTransformTools(assets: Record<string, HTMLImageElement>): Image[] {
+    const iconSize = Renderer.constrainMax(
+      ToolIconAttr.size * Renderer.pixelDensity(),
+      40
+    );
     const settingsBtn = new Image({
       y: 0,
-      width: ToolIconAttr.size,
-      height: ToolIconAttr.size,
-      offsetX: ToolIconAttr.size / 2,
-      offsetY: ToolIconAttr.size / 2,
+      width: iconSize,
+      height: iconSize,
+      offsetX: iconSize / 2,
+      offsetY: iconSize / 2,
       image: assets.settingsIcon,
     });
 
