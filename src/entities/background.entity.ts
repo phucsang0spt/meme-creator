@@ -33,6 +33,9 @@ export class BackgroundEntity extends RectEntity<Props> {
   onActive() {
     this.amountOfVerticalLine = Math.ceil(this.sprite.width / SIZE);
     this.amountOfHorizontalLine = Math.ceil(this.sprite.height / SIZE);
+
+    // stop logic engine
+    Renderer.running = false;
   }
 
   onDraw() {
