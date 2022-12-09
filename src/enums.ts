@@ -7,4 +7,5 @@ export enum ContextMode {
 export enum UtilitiesCode {
   TEXT = "text",
   IMAGE = "image",
+  BOX = "box",
 }

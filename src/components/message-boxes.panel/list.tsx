@@ -1,10 +1,10 @@
-import { LocalUploadList } from "components/local-upload-list";
+import { GridPic } from "components/grid-pic";
 import { Scroll } from "components/scroll";
 import { ShapeManagerEntity } from "entities/shape-manager.entity";
 import {
-  useFetchExtraImages,
-  useWatchExtraImages,
-} from "hooks/extra-image.hook";
+  useFetchMessageBoxes,
+  useWatchMessageBoxes,
+} from "hooks/message-boxes.hook";
 import { useEffect } from "react";
 import { useEntity } from "react-simple-game-engine/lib/utilities";
 import styled from "styled-components";
@@ -24,28 +24,25 @@ const Section = styled.section`
   min-height: 0;
   height: 100%;
 `;
-export function ImageList() {
+export function BoxList() {
   const [shapeManagerEntity] = useEntity(ShapeManagerEntity);
-  const { fetch, save, remove } = useFetchExtraImages();
-  const pictures = useWatchExtraImages();
+  const { loading, fetch } = useFetchMessageBoxes();
+  const boxes = useWatchMessageBoxes();
 
   useEffect(() => {
     fetch();
   }, [fetch]);
+
   return (
     <Root>
       <Section>
         <Scroll>
-          <LocalUploadList
-            data={pictures}
-            onAdd={(base64) => {
-              save(base64);
-            }}
-            onSelect={(base64) => {
-              shapeManagerEntity.addImage(base64);
-            }}
-            onRemove={(id) => {
-              remove(id);
+          <GridPic
+            loading={loading}
+            column={2}
+            data={boxes}
+            onSelect={(pic) => {
+              shapeManagerEntity.addImage(pic.src);
             }}
           />
         </Scroll>

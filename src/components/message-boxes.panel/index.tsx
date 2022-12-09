@@ -1,11 +1,11 @@
 import { forwardRef, Ref } from "react";
-import { MdImage } from "@react-icons/all-files/md/MdImage";
+import { MdChatBubble } from "@react-icons/all-files/md/MdChatBubble";
 
 import { Drawer, DrawerFuncs } from "../drawer";
 import { MenuTab } from "../menu-tab";
-import { ImageList } from "./list";
+import { BoxList } from "./list";
 
-export const ExtraImagePanel = forwardRef(function ExtraImagePanelPanel(
+export const MessageBoxPanel = forwardRef(function MessageBoxPanel(
   _: any,
   ref: Ref<DrawerFuncs>
 ) {
@@ -17,11 +17,11 @@ export const ExtraImagePanel = forwardRef(function ExtraImagePanelPanel(
           bottomDivider={false}
           styleTheme="red"
           selected={""}
-          tabs={[{ code: "extra-image", label: <MdImage /> }]}
+          tabs={[{ code: "message-box", label: <MdChatBubble /> }]}
         />
       }
     >
-      <ImageList />
+      <BoxList />
     </Drawer>
   );
 });

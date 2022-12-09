@@ -23,6 +23,7 @@ import { Utilities } from "components/utilities";
 import { BgSettingsPanel } from "components/bg-settings.panel";
 import { TextConfigPanel } from "components/text-config.panel";
 import { ExtraImagePanel } from "components/extra-image.panel";
+import { MessageBoxPanel } from "components/message-boxes.panel";
 
 const FloatIconSize = 30;
 
@@ -107,6 +108,7 @@ export function MainUI() {
   const refBgSettingsPanel = useRef<DrawerFuncs>();
   const refTextConfigPanel = useRef<DrawerFuncs>();
   const refExtraImagePanel = useRef<DrawerFuncs>();
+  const refMessageBoxPanel = useRef<DrawerFuncs>();
 
   const [shapeManagerEntity] = useEntity(ShapeManagerEntity);
 
@@ -122,6 +124,8 @@ export function MainUI() {
       };
     } else if (code === UtilitiesCode.IMAGE) {
       refExtraImagePanel.current!.open();
+    } else if (code === UtilitiesCode.BOX) {
+      refMessageBoxPanel.current!.open();
     }
   };
   return (
@@ -189,6 +193,7 @@ export function MainUI() {
       <BgSettingsPanel ref={refBgSettingsPanel} />
       <TextConfigPanel ref={refTextConfigPanel} />
       <ExtraImagePanel ref={refExtraImagePanel} />
+      <MessageBoxPanel ref={refMessageBoxPanel} />
       <Loading />
     </Root>
   );

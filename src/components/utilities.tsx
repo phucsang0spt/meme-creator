@@ -56,7 +56,7 @@ export function Utilities({ onSelect }: UtilitiesProps) {
           <div onClick={() => onSelect(UtilitiesCode.IMAGE)}>
             <FiImage />
           </div>
-          <div onClick={() => onSelect(UtilitiesCode.TEXT)}>
+          <div onClick={() => onSelect(UtilitiesCode.BOX)}>
             <FiMessageSquare />
           </div>
           <div onClick={() => onSelect(UtilitiesCode.TEXT)}>
