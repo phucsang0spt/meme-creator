@@ -56,7 +56,7 @@ export class ShapeManagerEntity extends RectEntity<Props> {
       this.worldManagement.getEntity(KonvaManagerEntity);
     this.viewportEntity = this.worldManagement.getEntity(ViewPortEntity);
     setTimeout(() => {
-      this.interactLayer = new InteractLayer({
+      this.interactLayer = new InteractLayer(this.viewportEntity, {
         copyIcon: this.props.copyIcon.domImg,
         trashIcon: this.props.trashIcon.domImg,
         refreshIcon: this.props.refreshIcon.domImg,
@@ -72,7 +72,7 @@ export class ShapeManagerEntity extends RectEntity<Props> {
     events: { onStartExport?: () => void; onCompletedExport?: () => void } = {}
   ) {
     await permissionWriteFile();
-    this.interactLayer.export(this.viewportEntity, this.trimExport, events);
+    this.interactLayer.export(this.trimExport, events);
   }
 
   async setBackground(src: string) {

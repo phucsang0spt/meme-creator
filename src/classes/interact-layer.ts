@@ -14,6 +14,7 @@ export class InteractLayer extends LayerEZ {
   private tr!: Transformer;
   private readonly toolStack: Record<string, Group> = {};
   constructor(
+    public readonly viewportEntity: ViewPortEntity,
     public readonly assets: {
       copyIcon: HTMLImageElement;
       trashIcon: HTMLImageElement;
@@ -131,8 +132,6 @@ export class InteractLayer extends LayerEZ {
     const stage = this.getStage();
     this.tr = new Konva.Transformer();
     this.originAdd(this.tr);
-  
-
     stage.on("click tap", (e) => {
       const target = e.target;
 
@@ -179,10 +178,10 @@ export class InteractLayer extends LayerEZ {
   }
 
   export(
-    viewportEntity: ViewPortEntity,
     trim: boolean,
     events: { onStartExport?: () => void; onCompletedExport?: () => void } = {}
   ) {
+    const viewportEntity = this.viewportEntity;
     const exportScale = 2;
     const resolutionRatio =
       viewportEntity.fixedResolution.width /

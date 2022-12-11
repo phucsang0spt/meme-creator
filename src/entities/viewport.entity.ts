@@ -23,9 +23,9 @@ export class ViewPortEntity extends RectEntity<Props> {
     x: 0,
     y: -90,
   };
-  private description: Text;
   private staticLayer: StaticLayer;
   private _currentResolution: Size;
+  private _description: Text;
 
   set currentResolution(size: Size) {
     this._currentResolution = size;
@@ -34,6 +34,10 @@ export class ViewPortEntity extends RectEntity<Props> {
 
   get currentResolution() {
     return this._currentResolution;
+  }
+
+  get description() {
+    return this._description;
   }
 
   protected onPrepare(): EntityPrepare<this> {
@@ -131,13 +135,15 @@ export class ViewPortEntity extends RectEntity<Props> {
       y: this.basePosition.y - this.fixedResolution.height / 2,
       text: `Viewport:  ${this._currentResolution.width} x ${this._currentResolution.height}px`,
     };
-    if (this.description) {
-      this.description.setAttrs({
+    if (this._description) {
+      this._description.setAttrs({
         ...config,
       });
-      this.description.x(this.description.x() - this.description.width() / 2);
-      this.description.y(
-        this.description.y() - this.description.height() / 2 - 5
+      this._description.x(
+        this._description.x() - this._description.width() / 2
+      );
+      this._description.y(
+        this._description.y() - this._description.height() / 2 - 5
       );
       return;
     }
@@ -150,6 +156,6 @@ export class ViewPortEntity extends RectEntity<Props> {
     text.x(text.x() - text.width() / 2);
     text.y(text.y() - text.height() / 2 - 5);
     this.staticLayer.add(text);
-    this.description = text;
+    this._description = text;
   }
 }

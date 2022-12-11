@@ -27,14 +27,17 @@ export class ShapeUtilities {
     );
     const shape = this.shape as ShapeWithUtilities;
     const layer = shape.getLayer() as InteractLayer;
+    const viewportEntity = layer.viewportEntity;
     const holderHeight = 10 + iconSize + 10;
-    const holderMarginTop = Renderer.constrainMax(
-      25 * Renderer.pixelDensity(),
-      65
-    );
     const group = new Group({
-      x: shape.x(),
-      y: shape.y() + shape.getClientRect().height / 2 + holderMarginTop,
+      x: viewportEntity.basePosition.x,
+      y:
+        viewportEntity.basePosition.y -
+        viewportEntity.fixedResolution.height / 2 -
+        holderHeight / 2 -
+        viewportEntity.description.getClientRect().height -
+        5 -
+        10,
       name: "group-tool",
     });
     (group as ShapeInput).toolable = false;
@@ -75,10 +78,6 @@ export class ShapeUtilities {
     refreshBtn.on("click tap", () => {
       shape.scale({ x: 1, y: 1 });
       shape.rotation(0);
-      group.setAttrs({
-        x: shape.x(),
-        y: shape.y() + shape.getClientRect().height / 2 + holderMarginTop,
-      });
     });
 
     deleteBtn.on("click tap", () => {
@@ -147,21 +146,6 @@ export class ShapeUtilities {
       group.add(tool);
     }
     layer.add(group);
-
-    shape.on("transform", () => {
-      // update tool position when move
-      group.setAttrs({
-        x: shape.x(),
-        y: shape.y() + shape.getClientRect().height / 2 + holderMarginTop,
-      });
-    });
-    shape.on("dragmove", () => {
-      // update tool position when move
-      group.setAttrs({
-        x: shape.x(),
-        y: shape.y() + shape.getClientRect().height / 2 + holderMarginTop,
-      });
-    });
     return group;
   }
 }
