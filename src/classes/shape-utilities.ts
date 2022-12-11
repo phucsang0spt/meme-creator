@@ -90,7 +90,9 @@ export class ShapeUtilities {
     });
 
     moveUp.on("click tap", () => {
-      shape.moveUp();
+      if (shape.getZIndex() < layer.maxZIndex) {
+        shape.moveUp();
+      }
     });
 
     deleteBtn.on("click tap", () => {

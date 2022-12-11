@@ -10,12 +10,37 @@ export class LayerEZ extends Layer {
     return this._renderer;
   }
 
+  get maxZIndex() {
+    const firstShape = this.getChildren()[0];
+    if (!firstShape) {
+      return null;
+    }
+    let max = firstShape.getZIndex();
+    this.iterativeShapes((shape) => {
+      if (shape.getZIndex() > max) {
+        max = shape.getZIndex();
+      }
+    });
+    return max;
+  }
+
   set renderer(_renderer: Window["Renderer"]) {
     if (this._renderer) {
       console.warn("Cant change renderer");
       return;
     }
     this._renderer = _renderer;
+  }
+
+  iterativeShapes(on: (shape: Shape) => void) {
+    const shapes: Shape[] = [];
+    for (const shape of this.getChildren()) {
+      if (shape instanceof Shape) {
+        on(shape);
+        shapes.push(shape);
+      }
+    }
+    return shapes;
   }
 
   originAdd(shape: Shape<ShapeConfig> | Transformer) {

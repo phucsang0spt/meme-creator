@@ -166,17 +166,6 @@ export class InteractLayer extends LayerEZ {
     });
   }
 
-  iterativeShapes(on: (shape: Shape) => void) {
-    const shapes: Shape[] = [];
-    for (const shape of this.getChildren()) {
-      if (shape instanceof Shape && shape.name() !== "holder") {
-        on(shape);
-        shapes.push(shape);
-      }
-    }
-    return shapes;
-  }
-
   export(
     trim: boolean,
     events: { onStartExport?: () => void; onCompletedExport?: () => void } = {}
