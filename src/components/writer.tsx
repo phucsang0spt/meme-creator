@@ -2,14 +2,16 @@ import { useEffect, useState } from "react";
 import styled from "styled-components";
 import { useDebounce } from "use-debounce";
 
-const Root = styled.input`
+const Root = styled.textarea`
   color: #fff;
-  background: #3e3e3e;
+  background: #3e3e3e60;
   border-radius: 3px;
   border: 1px solid #5e5e5e;
   padding: 5px;
   font-size: 14px;
   line-height: 14px;
+
+  height: 150px;
 
   &:focus {
     outline: none;
@@ -30,11 +32,5 @@ export function Writer({ onSave, defaultValue = "" }: WriterProps) {
       onSave?.(bounceValue);
     }
   }, [bounceValue, onSave, defaultValue]);
-  return (
-    <Root
-      type="text"
-      value={value}
-      onChange={(e) => setValue(e.target.value)}
-    />
-  );
+  return <Root value={value} onChange={(e) => setValue(e.target.value)} />;
 }
