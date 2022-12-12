@@ -2,10 +2,12 @@ import { TextEZ } from "classes/text.ez";
 import { ColorPicker } from "components/color-picker";
 import { NumericRange } from "components/numeric-range";
 import { RadioGroup } from "components/radio-group";
+import { Scroll } from "components/scroll";
 import { SettingsProperty } from "components/settings-property";
 import { Writer } from "components/writer";
 import { useDrawerData } from "hooks/drawer.hook";
 import { useCallback } from "react";
+import styled from "styled-components";
 
 const fontStyleOptions = [
   {
@@ -21,6 +23,10 @@ const fontStyleOptions = [
     code: "bold",
   },
 ];
+
+const Root = styled.div`
+  height: 100%;
+`;
 
 export function TextConfigForm() {
   const data = useDrawerData<{ selectedText: TextEZ }>();
@@ -39,38 +45,40 @@ export function TextConfigForm() {
     [data.selectedText]
   );
   return (
-    <div>
-      <SettingsProperty label="Content">
-        <Writer
-          defaultValue={data.selectedText.text()}
-          onSave={handleChangeContent}
-        />
-      </SettingsProperty>
-      <SettingsProperty label="Font size">
-        <NumericRange
-          range={[13, 50]}
-          defaultValue={data.selectedText.fontSize()}
-          onChange={(size) => {
-            data.selectedText.changeFontSize(size);
-          }}
-        />
-      </SettingsProperty>
-      <SettingsProperty label="Font style">
-        <RadioGroup
-          defaultValue={data.selectedText.fontStyle()}
-          name="font-style"
-          options={fontStyleOptions}
-          onChange={(style: string) => {
-            data.selectedText.changeFontStyle(style);
-          }}
-        />
-      </SettingsProperty>
-      <SettingsProperty label="Color">
-        <ColorPicker
-          defaultValue={data.selectedText.fill()}
-          onSave={handleChangeColor}
-        />
-      </SettingsProperty>
-    </div>
+    <Root>
+      <Scroll>
+        <SettingsProperty label="Content">
+          <Writer
+            defaultValue={data.selectedText.text()}
+            onSave={handleChangeContent}
+          />
+        </SettingsProperty>
+        <SettingsProperty label="Font size">
+          <NumericRange
+            range={[13, 50]}
+            defaultValue={data.selectedText.fontSize()}
+            onChange={(size) => {
+              data.selectedText.changeFontSize(size);
+            }}
+          />
+        </SettingsProperty>
+        <SettingsProperty label="Font style">
+          <RadioGroup
+            defaultValue={data.selectedText.fontStyle()}
+            name="font-style"
+            options={fontStyleOptions}
+            onChange={(style: string) => {
+              data.selectedText.changeFontStyle(style);
+            }}
+          />
+        </SettingsProperty>
+        <SettingsProperty label="Color">
+          <ColorPicker
+            defaultValue={data.selectedText.fill()}
+            onSave={handleChangeColor}
+          />
+        </SettingsProperty>
+      </Scroll>
+    </Root>
   );
 }

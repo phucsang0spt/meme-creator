@@ -1,26 +1,12 @@
 import { useEffect, useState } from "react";
 import styled from "styled-components";
 import { useDebounce } from "use-debounce";
+import { SketchPicker } from "react-color";
 
-const Root = styled.label<{
+const Root = styled.div<{
   color: string;
 }>`
-  display: inline-block;
-
-  > div {
-    border-radius: 100%;
-    border: 1px solid #fff;
-    width: 30px;
-    height: 30px;
-    background-color: ${({ color }) => color};
-  }
-
-  input {
-    display: inline-block;
-    width: 1px;
-    height: 1px;
-    background-color: transparent;
-  }
+  padding-bottom: 10px;
 `;
 
 type ColorPickerProps = {
@@ -37,13 +23,14 @@ export function ColorPicker({ onSave, defaultValue = "" }: ColorPickerProps) {
       onSave?.(bounceValue);
     }
   }, [bounceValue, onSave, defaultValue]);
+
   return (
     <Root color={value}>
-      <div />
-      <input
-        type="color"
-        value={value}
-        onChange={(e) => setValue(e.target.value)}
+      <SketchPicker
+        color={value}
+        onChangeComplete={(color) => {
+          setValue(color.hex);
+        }}
       />
     </Root>
   );

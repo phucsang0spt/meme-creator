@@ -3,6 +3,7 @@ import styled from "styled-components";
 import { useDebounce } from "use-debounce";
 
 const Root = styled.textarea`
+  font-family: "Noto Sans", sans-serif;
   color: #fff;
   background: #3e3e3e60;
   border-radius: 3px;
@@ -11,7 +12,7 @@ const Root = styled.textarea`
   font-size: 14px;
   line-height: 14px;
 
-  height: 150px;
+  height: 100px;
 
   &:focus {
     outline: none;
