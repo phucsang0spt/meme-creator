@@ -1,13 +1,14 @@
+import { useEffect } from "react";
+import { useEntity } from "react-simple-game-engine/lib/utilities";
+import styled from "styled-components";
+
 import { GridPic } from "components/grid-pic";
 import { Scroll } from "components/scroll";
 import { ShapeManagerEntity } from "entities/shape-manager.entity";
 import {
   useFetchMessageBoxes,
   useWatchMessageBoxes,
-} from "hooks/message-boxes.hook";
-import { useEffect } from "react";
-import { useEntity } from "react-simple-game-engine/lib/utilities";
-import styled from "styled-components";
+} from "hooks/message-box.hook";
 
 const Root = styled.div`
   display: flex;
@@ -22,7 +23,7 @@ const Section = styled.section`
   margin-top: 5px;
   padding-top: 5px;
   min-height: 0;
-  height: 100%;
+  flex: 1;
 `;
 export function BoxList() {
   const [shapeManagerEntity] = useEntity(ShapeManagerEntity);

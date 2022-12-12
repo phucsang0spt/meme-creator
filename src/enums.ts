@@ -8,4 +8,5 @@ export enum UtilitiesCode {
   TEXT = "text",
   IMAGE = "image",
   BOX = "box",
+  EMOJI = "emoji",
 }

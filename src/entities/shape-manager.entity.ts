@@ -123,12 +123,12 @@ export class ShapeManagerEntity extends RectEntity<Props> {
     return ez;
   }
 
-  async addImage(src: string) {
+  async addImage(src: string, _size = 200) {
     const image = await createImage(src);
     const ratio = image.width / image.height;
     const size = {
-      width: 200,
-      height: 200 / ratio,
+      width: _size,
+      height: _size / ratio,
     };
     const ez = new ImageEZ({
       x: this.viewportEntity.basePosition.x,
