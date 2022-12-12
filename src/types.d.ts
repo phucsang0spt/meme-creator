@@ -9,4 +9,6 @@ type Picture = {
   src: string;
 };
 
-type MemeTemplate = Picture;
+type MemeTemplate = Picture & {
+  tags: string[];
+};

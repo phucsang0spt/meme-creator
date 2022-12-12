@@ -15,6 +15,7 @@ export const galleryMemeTemplates = paths
     return code
       ? {
           id: genId(),
+          tags: code.split("-").map((tag) => tag.toLowerCase()),
           src: require(`../${path}`),
         }
       : null;

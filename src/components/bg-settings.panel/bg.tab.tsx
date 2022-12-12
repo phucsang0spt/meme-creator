@@ -3,7 +3,6 @@ import styled from "styled-components";
 
 import { GalleyMemeTemplates } from "components/gallery-meme-templates";
 import { LocalMemeTemplates } from "components/local-meme-templates";
-import { Scroll } from "components/scroll";
 
 const Root = styled.div`
   display: flex;
@@ -72,13 +71,6 @@ const HeaderTab = styled.ul`
   }
 `;
 
-const Section = styled.section`
-  flex: 1;
-  min-height: 0;
-  margin-top: 5px;
-  padding-top: 5px;
-`;
-
 enum BgMode {
   GALLERY,
   LOCAL,
@@ -99,15 +91,12 @@ export function BgTab() {
           onClick={() => setBgMode(BgMode.LOCAL)}
         />
       </HeaderTab>
-      <Section>
-        <Scroll>
-          {bgMode === BgMode.GALLERY ? (
-            <GalleyMemeTemplates />
-          ) : (
-            <LocalMemeTemplates />
-          )}
-        </Scroll>
-      </Section>
+      <div style={{ marginTop: 10 }} />
+      {bgMode === BgMode.GALLERY ? (
+        <GalleyMemeTemplates />
+      ) : (
+        <LocalMemeTemplates />
+      )}
     </Root>
   );
 }

@@ -19,16 +19,14 @@ export function useFetchLocalMemeTemplates() {
 
   const fetch = useCallback(async () => {
     setLoading(true);
-    const memes: MemeTemplate[] = await storage.get(
-      StorageKeys.LOCAL_MEME_TEMPLATE
-    );
+    const memes: Picture[] = await storage.get(StorageKeys.LOCAL_MEME_TEMPLATE);
     push("data", memes || []);
     setLoading(false);
   }, [push, storage]);
 
   const save = useCallback(
     async (src: string) => {
-      let memes = getCurrent<[MemeTemplate[]]>("data")[0];
+      let memes = getCurrent<[Picture[]]>("data")[0];
 
       memes = [
         ...memes,
@@ -45,8 +43,8 @@ export function useFetchLocalMemeTemplates() {
   );
 
   const remove = useCallback(
-    async (id: MemeTemplate["id"]) => {
-      let memes = getCurrent<[MemeTemplate[]]>("data")[0];
+    async (id: Picture["id"]) => {
+      let memes = getCurrent<[Picture[]]>("data")[0];
       memes = memes.filter((meme) => meme.id !== id);
       await storage.set(StorageKeys.LOCAL_MEME_TEMPLATE, memes);
 
@@ -60,5 +58,5 @@ export function useFetchLocalMemeTemplates() {
 
 export function useWatchLocalMemeTemplates() {
   const { listen } = useLocalMemeTemplatesState();
-  return listen<[MemeTemplate[]]>("data")[0];
+  return listen<[Picture[]]>("data")[0];
 }

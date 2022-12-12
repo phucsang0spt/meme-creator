@@ -13,12 +13,25 @@ export function useFetchGalleyMemeTemplates() {
   const [loading, setLoading] = useState(true);
 
   const { push } = useGalleyMemeTemplatesState();
-  const fetch = useCallback(async () => {
-    setLoading(true);
-    await tick(100);
-    push("data", galleryMemeTemplates);
-    setLoading(false);
-  }, [push]);
+  const fetch = useCallback(
+    async (keyword?: string) => {
+      setLoading(true);
+      await tick(100);
+      if (keyword) {
+        const _keyword = keyword.toLowerCase();
+        push(
+          "data",
+          galleryMemeTemplates.filter((tl) =>
+            tl.tags.some((tag) => tag.includes(_keyword))
+          )
+        );
+      } else {
+        push("data", galleryMemeTemplates);
+      }
+      setLoading(false);
+    },
+    [push]
+  );
 
   return { loading, fetch };
 }
