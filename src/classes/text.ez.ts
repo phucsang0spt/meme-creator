@@ -15,9 +15,10 @@ export class TextEZ extends Text implements WithUtilities {
 
   clone() {
     const ez = new TextEZ(this.getAttrs());
+    const { width, height } = ez.getClientRect();
     ez.setAttrs({
-      x: this.x() + this.width(),
-      y: this.y() + this.height(),
+      x: this.x() + width / 2,
+      y: this.y() + height / 2,
     });
     ez.onShowSettings = this.onShowSettings;
     return ez;
