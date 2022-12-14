@@ -130,7 +130,9 @@ export class InteractLayer extends LayerEZ {
 
   private setupTransformer() {
     const stage = this.getStage();
-    this.tr = new Konva.Transformer();
+    this.tr = new Konva.Transformer({
+      anchorSize: 20,
+    });
     this.originAdd(this.tr);
     stage.on("click tap", (e) => {
       const target = e.target;
