@@ -13,7 +13,7 @@ import { ImageEZ } from "classes/image.ez";
 
 import { KonvaManagerEntity } from "./konva-manager.entity";
 import { ViewPortEntity } from "./viewport.entity";
-import { permissionWriteFile } from "download";
+import { openAppSettings, permissionWriteFile } from "download";
 import { TextEZ } from "classes/text.ez";
 import { createImage } from "utils";
 
@@ -71,8 +71,12 @@ export class ShapeManagerEntity extends RectEntity<Props> {
   async export(
     events: { onStartExport?: () => void; onCompletedExport?: () => void } = {}
   ) {
-    await permissionWriteFile();
-    this.interactLayer.export(this.trimExport, events);
+    const isOk = await permissionWriteFile();
+    if (isOk) {
+      this.interactLayer.export(this.trimExport, events);
+    } else {
+      openAppSettings();
+    }
   }
 
   async setBackground(src: string) {

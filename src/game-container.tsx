@@ -11,7 +11,7 @@ const Root = styled.div`
 export function GameContainer() {
   return (
     <Root>
-      <GameBootstrap scenes={[MainScene]} height={1280} width={720} />
+      <GameBootstrap logPopup scenes={[MainScene]} height={1280} width={720} />
     </Root>
   );
 }

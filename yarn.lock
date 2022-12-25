@@ -3192,6 +3192,11 @@ caniuse-lite@^1.0.0, caniuse-lite@^1.0.30001370, caniuse-lite@^1.0.30001373:
   resolved "https://registry.yarnpkg.com/caniuse-lite/-/caniuse-lite-1.0.30001382.tgz#4d37f0d0b6fffb826c8e5e1c0f4bf8ce592db949"
   integrity sha512-2rtJwDmSZ716Pxm1wCtbPvHtbDWAreTPxXbkc5RkKglow3Ig/4GNGazDI9/BVnXbG/wnv6r3B5FEbkfg9OcTGg==
 
+capacitor-native-settings@^4.0.3:
+  version "4.0.3"
+  resolved "https://registry.yarnpkg.com/capacitor-native-settings/-/capacitor-native-settings-4.0.3.tgz#f786c9ec746d37800ef60a9b76788351a440a6f6"
+  integrity sha512-wxWFwdSySJ1dX8eLFogTYluLYu8fc8biMTL9x0ioI559mHiPDDoCBc//W0nhByUG7a1UxrY4vM4MGDTc/Mf7Bw==
+
 case-sensitive-paths-webpack-plugin@^2.4.0:
   version "2.4.0"
   resolved "https://registry.yarnpkg.com/case-sensitive-paths-webpack-plugin/-/case-sensitive-paths-webpack-plugin-2.4.0.tgz#db64066c6422eed2e08cc14b986ca43796dbc6d4"

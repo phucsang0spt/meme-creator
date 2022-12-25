@@ -260,8 +260,11 @@ export class InteractLayer extends LayerEZ {
       const output = canvas.toDataURL("img/png");
 
       events.onStartExport?.();
-      downloadFile("meme.png", output).then(() => {
+      downloadFile("meme.png", output).then((isSuccess) => {
         events.onCompletedExport?.();
+        if (isSuccess) {
+          alert("Save meme successfully");
+        }
       });
 
       document.body.removeChild(canvas);
