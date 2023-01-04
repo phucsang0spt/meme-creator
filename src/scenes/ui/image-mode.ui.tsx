@@ -104,7 +104,7 @@ const AdsBanner = styled.section`
 `;
 
 type MenuTabCode = typeof ContextModes[0]["code"] | "export";
-export function MainUI() {
+export function ImageModeUI() {
   const { push } = useConnectRender("loading");
   const refBgSettingsPanel = useRef<DrawerFuncs>();
   const refTextConfigPanel = useRef<DrawerFuncs>();

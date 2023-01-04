@@ -1,7 +1,8 @@
 import styled from "styled-components";
 import { GameBootstrap } from "react-simple-game-engine";
 
-import { MainScene } from "scenes/main.scene";
+import { ImageModeScene } from "scenes/image-mode.scene";
+import { MenuScene } from "scenes/menu.scene";
 
 const Root = styled.div`
   width: 100%;
@@ -11,7 +12,11 @@ const Root = styled.div`
 export function GameContainer() {
   return (
     <Root>
-      <GameBootstrap logPopup scenes={[MainScene]} height={1280} width={720} />
+      <GameBootstrap
+        scenes={[MenuScene, ImageModeScene]}
+        height={1280}
+        width={720}
+      />
     </Root>
   );
 }

@@ -7,7 +7,7 @@ import {
 } from "react-simple-game-engine";
 import { type Avatar } from "react-simple-game-engine/lib/export-types";
 
-import { MainUI } from "./ui/main.ui";
+import { ImageModeUI } from "./ui/image-mode.ui";
 
 import { BackgroundEntity } from "entities/background.entity";
 import { ViewPortEntity } from "entities/viewport.entity";
@@ -23,9 +23,9 @@ import layerUpIcon from "assets/icons/layer-up.svg";
 
 import empty from "assets/empty.png";
 
-@SceneTag("main")
-@SceneUI(MainUI)
-export class MainScene extends Scene<{}> {
+@SceneTag("image-mode")
+@SceneUI(ImageModeUI)
+export class ImageModeScene extends Scene<{}> {
   @SpriteFrom(empty)
   empty: Avatar;
 
