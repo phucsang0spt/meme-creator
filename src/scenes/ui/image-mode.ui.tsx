@@ -1,22 +1,22 @@
-import { useRef, useState } from "react";
-import { useConnectRender } from "use-connect-render";
+import { useRef } from "react";
 import styled from "styled-components";
-import { MdFileDownload } from "@react-icons/all-files/md/MdFileDownload";
 import { MdPictureInPictureAlt } from "@react-icons/all-files/md/MdPictureInPictureAlt";
+import { MdArrowBack } from "@react-icons/all-files/md/MdArrowBack";
+import { FiRefreshCcw } from "@react-icons/all-files/fi/FiRefreshCcw";
 
 import {
   Control,
+  ControlContainer,
   useEntity,
   useScaleContainer,
+  useScene,
 } from "react-simple-game-engine/lib/utilities";
 
-import { ContextMode, UtilitiesCode } from "enums";
-import { ContextModes } from "options";
+import { UtilitiesCode } from "enums";
 
 import { ShapeManagerEntity } from "entities/shape-manager.entity";
 
 import { DrawerFuncs } from "components/drawer";
-import { MenuTab } from "components/menu-tab";
 import { Loading } from "components/loading";
 import { Utilities } from "components/utilities";
 
@@ -25,6 +25,8 @@ import { TextConfigPanel } from "components/text-config.panel";
 import { ExtraImagePanel } from "components/extra-image.panel";
 import { MessageBoxPanel } from "components/message-box.panel";
 import { EmojiPanel } from "components/emoji.panel";
+import { ConfirmPopup } from "components/confirm-popup";
+import { OverlayFuncs } from "components/overlay";
 
 const FloatIconSize = 30;
 
@@ -36,13 +38,6 @@ const Root = styled.div`
 
   display: flex;
   flex-direction: column;
-`;
-
-const Header = styled.header`
-  box-shadow: 0 2px 5px 1px #00000077;
-  position: relative;
-  z-index: 3;
-  width: 100%;
 `;
 
 const Footer = styled.footer`
@@ -96,6 +91,22 @@ const FloatIcon = styled.span`
   }
 `;
 
+const FloatOutlineIcon = styled.span`
+  border-radius: 100%;
+  width: ${FloatIconSize}px;
+  height: ${FloatIconSize}px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  > svg {
+    font-size: ${FloatIconSize * 0.9}px;
+    line-height: ${FloatIconSize * 0.9}px;
+    color: #fff;
+  }
+`;
+
 const AdsBanner = styled.section`
   width: 100%;
   border-top: 1px solid #5e5e5e;
@@ -103,20 +114,17 @@ const AdsBanner = styled.section`
   min-height: 40px;
 `;
 
-type MenuTabCode = typeof ContextModes[0]["code"] | "export";
 export function ImageModeUI() {
-  const { push } = useConnectRender("loading");
+  const scene = useScene();
   const refBgSettingsPanel = useRef<DrawerFuncs>();
   const refTextConfigPanel = useRef<DrawerFuncs>();
   const refExtraImagePanel = useRef<DrawerFuncs>();
   const refMessageBoxPanel = useRef<DrawerFuncs>();
   const refEmojiPanel = useRef<DrawerFuncs>();
+  const refConfirmClearObjects = useRef<OverlayFuncs>();
 
   const [shapeManagerEntity] = useEntity(ShapeManagerEntity);
 
-  const [contextMode, setContextMode] = useState<MenuTabCode>(
-    ContextMode.IMAGE as MenuTabCode
-  );
   const ScaleContainer = useScaleContainer();
 
   const handleSelectUtilities = (code: UtilitiesCode) => {
@@ -132,57 +140,37 @@ export function ImageModeUI() {
       refEmojiPanel.current!.open();
     }
   };
+
+  const handleSureClearObjects = () => {
+    shapeManagerEntity.clearAll();
+  };
+
   return (
     <Root>
-      <Header>
-        <MenuTab
-          selected={contextMode}
-          onChange={(code: MenuTabCode) => {
-            if (code === "export") {
-              shapeManagerEntity.export({
-                onStartExport: () => {
-                  push("global", true);
-                },
-                onCompletedExport: () => {
-                  push("global", false);
-                },
-              });
-            } else {
-              setContextMode(code as ContextMode);
-            }
-          }}
-          tabs={
-            [
-              ...ContextModes,
-              { code: "export", label: <MdFileDownload /> },
-            ] as {
-              label: string;
-              code: MenuTabCode;
-            }[]
-          }
-        />
-      </Header>
       <Main>
         <ControlStack>
           <Control top={10} left={10}>
-            <FloatIcon onClick={() => refBgSettingsPanel.current!.open()}>
-              <MdPictureInPictureAlt />
-            </FloatIcon>
+            <FloatOutlineIcon onClick={() => scene.switchToScene("menu")}>
+              <MdArrowBack />
+            </FloatOutlineIcon>
           </Control>
-          {/* <Control top={10} right={10}>
+
+          <Control top={10} right={10}>
             <ControlContainer>
-              <Control top={0} right={0}>
-                <FloatIcon>
-                  <FiPlus onClick={() => frameManagerEntity.zoomIn()} />
+              <Control top={0} right={FloatIconSize + 20}>
+                <FloatIcon
+                  onClick={() => refConfirmClearObjects.current!.open()}
+                >
+                  <FiRefreshCcw />
                 </FloatIcon>
               </Control>
-              <Control top={FloatIconSize + 5} right={0}>
-                <FloatIcon>
-                  <FiMinus onClick={() => frameManagerEntity.zoomOut()} />
+              <Control top={0} right={0}>
+                <FloatIcon onClick={() => refBgSettingsPanel.current!.open()}>
+                  <MdPictureInPictureAlt />
                 </FloatIcon>
               </Control>
             </ControlContainer>
-          </Control> */}
+          </Control>
         </ControlStack>
         <CanvasRoot>
           <ScaleContainer>
@@ -199,6 +187,9 @@ export function ImageModeUI() {
       <ExtraImagePanel ref={refExtraImagePanel} />
       <MessageBoxPanel ref={refMessageBoxPanel} />
       <EmojiPanel ref={refEmojiPanel} />
+      <ConfirmPopup ref={refConfirmClearObjects} onOK={handleSureClearObjects}>
+        Are you certain want to delete all objects ?
+      </ConfirmPopup>
       <Loading />
     </Root>
   );

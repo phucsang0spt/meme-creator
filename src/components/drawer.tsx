@@ -86,10 +86,11 @@ type DrawerProps = {
   children: ReactNode;
   defaultOpen?: DrawerData | boolean;
 };
-const _Drawer = (
+
+export const Drawer = forwardRef(function Drawer(
   { header, children, defaultOpen = false }: DrawerProps,
   ref: Ref<DrawerFuncs>
-) => {
+) {
   const [present, setPresent] = useState({
     isOpen: !!defaultOpen,
     data:
@@ -143,6 +144,4 @@ const _Drawer = (
       </div>
     </Root>
   );
-};
-
-export const Drawer = forwardRef(_Drawer);
+});

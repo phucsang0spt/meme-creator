@@ -6,6 +6,7 @@ import {
 import {
   Avatar,
   EntityPrepare,
+  Point,
 } from "react-simple-game-engine/lib/export-types";
 
 import { InteractLayer } from "classes/interact-layer";
@@ -79,6 +80,16 @@ export class ShapeManagerEntity extends RectEntity<Props> {
     }
   }
 
+  clearAll() {
+    // remove all objects
+    this.interactLayer.clearTransformer();
+    this.interactLayer.iterativeShapes((shape) => {
+      if (shape.name() !== "background") {
+        (shape as ShapeWithUtilities).destroy();
+      }
+    });
+  }
+
   async setBackground(src: string) {
     const image = await createImage(src);
     const ratio = image.width / image.height;
@@ -98,7 +109,7 @@ export class ShapeManagerEntity extends RectEntity<Props> {
         y: this.viewportEntity.basePosition.y,
         ...size,
         image,
-        name: "selectable-shape",
+        name: "background",
       });
       (this.background as ShapeInput).canDuplicate = false;
       (this.background as ShapeInput).onBeforeDestroy = () => {
@@ -113,10 +124,17 @@ export class ShapeManagerEntity extends RectEntity<Props> {
     });
   }
 
+  randomPositionByAmplitude(point: Point) {
+    const amplitude = 30;
+    return {
+      x: this.renderer.random(point.x - amplitude, point.x + amplitude),
+      y: this.renderer.random(point.y - amplitude, point.y + amplitude),
+    };
+  }
+
   addText() {
     const ez = new TextEZ({
-      x: this.viewportEntity.basePosition.x,
-      y: this.viewportEntity.basePosition.y,
+      ...this.randomPositionByAmplitude(this.viewportEntity.basePosition),
       text: "Hello EZ!!!",
       fill: "#fff",
       fontSize: 29,
@@ -135,8 +153,7 @@ export class ShapeManagerEntity extends RectEntity<Props> {
       height: _size / ratio,
     };
     const ez = new ImageEZ({
-      x: this.viewportEntity.basePosition.x,
-      y: this.viewportEntity.basePosition.y,
+      ...this.randomPositionByAmplitude(this.viewportEntity.basePosition),
       ...size,
       image,
     });

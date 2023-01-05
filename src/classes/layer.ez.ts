@@ -36,10 +36,13 @@ export class LayerEZ extends Layer {
     const shapes: Shape[] = [];
     for (const shape of this.getChildren()) {
       if (shape instanceof Shape) {
-        on(shape);
         shapes.push(shape);
       }
     }
+    for (const shape of shapes) {
+      on(shape);
+    }
+
     return shapes;
   }
 

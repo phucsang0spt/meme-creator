@@ -86,7 +86,7 @@ export class InteractLayer extends LayerEZ {
     }
     return undefined;
   }
-  private clearTransformer() {
+  public clearTransformer() {
     this.setTransformNodes([]);
   }
 
@@ -144,7 +144,10 @@ export class InteractLayer extends LayerEZ {
       }
 
       // do nothing if clicked NOT on our rectangles
-      if (!target.hasName("selectable-shape")) {
+      if (
+        !(target instanceof Shape) ||
+        !(target.parent instanceof InteractLayer)
+      ) {
         return;
       }
 
@@ -282,9 +285,6 @@ export class InteractLayer extends LayerEZ {
   }
 
   add(shape: ShapeInput) {
-    if (!shape.name()) {
-      shape.name("selectable-shape");
-    }
     if (shape.toolable == null) {
       shape.toolable = true;
     }

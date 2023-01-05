@@ -18,10 +18,10 @@ import { Line } from "konva/lib/shapes/Line";
 type Props = {};
 
 export class ViewPortEntity extends RectEntity<Props> {
-  public readonly fixedResolution: Size = { width: 396, height: 704 };
+  public readonly fixedResolution: Size = { width: 432, height: 768 };
   public readonly basePosition: Point = {
     x: 0,
-    y: -90,
+    y: -120,
   };
   private staticLayer: StaticLayer;
   private _currentResolution: Size;
