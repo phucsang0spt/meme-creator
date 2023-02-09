@@ -82,6 +82,7 @@ const ModeItem = styled.div`
       height: 100%;
       background-color: #00000075;
       content: "Coming soon!";
+      text-align: center;
       display: flex;
       align-items: center;
       justify-content: center;
