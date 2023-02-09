@@ -6,6 +6,7 @@ import { MdTheaters } from "@react-icons/all-files/md/MdTheaters";
 import { FiImage } from "@react-icons/all-files/fi/FiImage";
 import { FiStar } from "@react-icons/all-files/fi/FiStar";
 import { useScene } from "react-simple-game-engine/lib/utilities";
+import { toCorrectPixel } from "px";
 
 const Root = styled.div`
   width: 100%;
@@ -29,7 +30,7 @@ const Floater = styled.main`
 const Body = styled.div`
   width: 100%;
   height: 100%;
-  max-width: 250px;
+  max-width: ${toCorrectPixel(250)}px;
   padding: 0 0 30px 0;
   margin-inline: auto;
 
@@ -68,8 +69,8 @@ const ModeItem = styled.div`
   justify-content: center;
 
   p {
-    font-size: 13px;
-    line-height: 13px;
+    font-size: ${toCorrectPixel(13)}px;
+    line-height: ${toCorrectPixel(13)}px;
   }
 
   &[aria-disabled="true"] {
@@ -105,8 +106,8 @@ const Footer = styled.footer`
   width: 100%;
   border-radius: 4px;
 
-  font-size: 1.6rem;
-  line-height: 1.6rem;
+  font-size: 2rem;
+  line-height: 2rem;
   color: #e1e1e1;
 
   display: flex;

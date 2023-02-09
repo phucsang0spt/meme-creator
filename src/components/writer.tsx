@@ -1,6 +1,6 @@
-import { useEffect, useState } from "react";
+import { useMemo } from "react";
 import styled from "styled-components";
-import { useDebounce } from "use-debounce";
+import { debounce } from "utils";
 
 const Root = styled.textarea`
   font-family: "Noto Sans", sans-serif;
@@ -14,9 +14,10 @@ const Root = styled.textarea`
 
   height: 100px;
 
-  &:focus {
-    outline: none;
-  }
+  text-decoration: none !important;
+  box-shadow: none !important;
+  outline: none !important;
+  text-underline-position: auto;
 `;
 
 type WriterProps = {
@@ -25,13 +26,16 @@ type WriterProps = {
 };
 
 export function Writer({ onSave, defaultValue = "" }: WriterProps) {
-  const [value, setValue] = useState(defaultValue);
-  const [bounceValue] = useDebounce(value, 200);
+  const handleSaveChange = useMemo(() => {
+    return debounce((value: string) => {
+      onSave?.(value);
+    });
+  }, [onSave]);
 
-  useEffect(() => {
-    if (defaultValue !== bounceValue) {
-      onSave?.(bounceValue);
-    }
-  }, [bounceValue, onSave, defaultValue]);
-  return <Root value={value} onChange={(e) => setValue(e.target.value)} />;
+  return (
+    <Root
+      defaultValue={defaultValue}
+      onChange={(e) => handleSaveChange(e.target.value)}
+    />
+  );
 }

@@ -14,6 +14,8 @@ import { KonvaManagerEntity } from "entities/konva-manager.entity";
 import { Resolutions } from "options";
 import { Text, TextConfig } from "konva/lib/shapes/Text";
 import { Line } from "konva/lib/shapes/Line";
+import { FloatIconSize } from "scenes/ui/image-mode.ui";
+import { toCorrectPixel } from "px";
 
 type Props = {};
 
@@ -21,7 +23,7 @@ export class ViewPortEntity extends RectEntity<Props> {
   public readonly fixedResolution: Size = { width: 432, height: 768 };
   public readonly basePosition: Point = {
     x: 0,
-    y: -120,
+    y: 0,
   };
   private staticLayer: StaticLayer;
   private _currentResolution: Size;
@@ -42,6 +44,17 @@ export class ViewPortEntity extends RectEntity<Props> {
 
   protected onPrepare(): EntityPrepare<this> {
     this.currentResolution = Resolutions.HD;
+
+    const topOfEditorViewport = 0 - this.fixedResolution.height / 2;
+    const topOfCameraViewport = 0 - this.renderer.scaler.viewport.height / 2;
+
+    const distanceUpCamera = Math.abs(
+      topOfEditorViewport - topOfCameraViewport
+    );
+    this.basePosition.y = -distanceUpCamera;
+    this.basePosition.y += this.renderer.scaler.screenUnitToCanvasUnit(
+      FloatIconSize + toCorrectPixel(10 + 25)
+    );
     return {
       sprite: new LogicComponent([
         ColorSprite,
@@ -119,7 +132,7 @@ export class ViewPortEntity extends RectEntity<Props> {
       ],
       x: 0,
       y: 0,
-      stroke: "#2980b9",
+      stroke: "hsl(204deg 64% 84%)",
       strokeWidth: 2,
     });
     this.staticLayer.add(line);

@@ -17,7 +17,7 @@ export class BackgroundEntity extends RectEntity<Props> {
       sprite: new LogicComponent([
         ColorSprite,
         {
-          source: [44, 62, 80],
+          source: [62, 87, 112],
         },
       ]),
       transform: {

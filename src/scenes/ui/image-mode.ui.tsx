@@ -3,6 +3,7 @@ import styled from "styled-components";
 import { MdPictureInPictureAlt } from "@react-icons/all-files/md/MdPictureInPictureAlt";
 import { MdArrowBack } from "@react-icons/all-files/md/MdArrowBack";
 import { FiRefreshCcw } from "@react-icons/all-files/fi/FiRefreshCcw";
+import { MdFileDownload } from "@react-icons/all-files/md/MdFileDownload";
 
 import {
   Control,
@@ -27,8 +28,10 @@ import { MessageBoxPanel } from "components/message-box.panel";
 import { EmojiPanel } from "components/emoji.panel";
 import { ConfirmPopup } from "components/confirm-popup";
 import { OverlayFuncs } from "components/overlay";
+import { useSetLoading } from "hooks/loading.hook";
+import { toCorrectPixel } from "px";
 
-const FloatIconSize = 30;
+export const FloatIconSize = toCorrectPixel(35, true);
 
 const Root = styled.div`
   position: relative;
@@ -115,6 +118,7 @@ const AdsBanner = styled.section`
 `;
 
 export function ImageModeUI() {
+  const { set } = useSetLoading();
   const scene = useScene();
   const refBgSettingsPanel = useRef<DrawerFuncs>();
   const refTextConfigPanel = useRef<DrawerFuncs>();
@@ -145,6 +149,17 @@ export function ImageModeUI() {
     shapeManagerEntity.clearAll();
   };
 
+  const handleExport = () => {
+    shapeManagerEntity.export({
+      onStartExport: () => {
+        set(true);
+      },
+      onCompletedExport: () => {
+        set(false);
+      },
+    });
+  };
+
   return (
     <Root>
       <Main>
@@ -157,16 +172,28 @@ export function ImageModeUI() {
 
           <Control top={10} right={10}>
             <ControlContainer>
-              <Control top={0} right={FloatIconSize + 20}>
-                <FloatIcon
-                  onClick={() => refConfirmClearObjects.current!.open()}
-                >
-                  <FiRefreshCcw />
-                </FloatIcon>
+              <Control top={0} right={FloatIconSize + 40}>
+                <ControlContainer>
+                  <Control top={0} right={FloatIconSize + 10}>
+                    <FloatIcon
+                      onClick={() => refConfirmClearObjects.current!.open()}
+                    >
+                      <FiRefreshCcw />
+                    </FloatIcon>
+                  </Control>
+                  <Control top={0} right={0}>
+                    <FloatIcon
+                      onClick={() => refBgSettingsPanel.current!.open()}
+                    >
+                      <MdPictureInPictureAlt />
+                    </FloatIcon>
+                  </Control>
+                </ControlContainer>
               </Control>
+              {/* // */}
               <Control top={0} right={0}>
-                <FloatIcon onClick={() => refBgSettingsPanel.current!.open()}>
-                  <MdPictureInPictureAlt />
+                <FloatIcon onClick={handleExport}>
+                  <MdFileDownload />
                 </FloatIcon>
               </Control>
             </ControlContainer>

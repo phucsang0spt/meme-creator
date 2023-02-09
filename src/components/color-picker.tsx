@@ -1,7 +1,7 @@
-import { useEffect, useState } from "react";
+import { useMemo, useState } from "react";
 import styled from "styled-components";
-import { useDebounce } from "use-debounce";
-import { SketchPicker } from "react-color";
+import { ChromePicker } from "react-color";
+import { debounce } from "utils";
 
 const Root = styled.div<{
   color: string;
@@ -16,21 +16,19 @@ type ColorPickerProps = {
 
 export function ColorPicker({ onSave, defaultValue = "" }: ColorPickerProps) {
   const [value, setValue] = useState(defaultValue);
-  const [bounceValue] = useDebounce(value, 200);
 
-  useEffect(() => {
-    if (defaultValue !== bounceValue) {
-      onSave?.(bounceValue);
-    }
-  }, [bounceValue, onSave, defaultValue]);
+  const handleSaveChange = useMemo(() => {
+    return debounce((value: string) => {
+      onSave?.(value);
+    });
+  }, [onSave]);
 
   return (
     <Root color={value}>
-      <SketchPicker
+      <ChromePicker
         color={value}
-        onChangeComplete={(color) => {
-          setValue(color.hex);
-        }}
+        onChange={(color) => setValue(color.hex)}
+        onChangeComplete={(color) => handleSaveChange(color.hex)}
       />
     </Root>
   );

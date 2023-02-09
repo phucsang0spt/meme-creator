@@ -47,11 +47,6 @@ export class ImageModeScene extends Scene<{}> {
   @SpriteFrom(refreshIcon)
   refreshIcon: Avatar;
 
-  // protected onBootstrapDone(simpleCamera: SimpleCamera) {
-  //   (window as any).simpleCamera = simpleCamera;
-  //   // simpleCamera.x += 90;
-  // }
-
   getComponents() {
     return [
       new LogicComponent([BackgroundEntity, {}]),

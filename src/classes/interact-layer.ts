@@ -1,6 +1,5 @@
 import Konva from "konva";
 import { Group } from "konva/lib/Group";
-import { Node, NodeConfig } from "konva/lib/Node";
 import { Shape } from "konva/lib/Shape";
 import { Transformer } from "konva/lib/shapes/Transformer";
 
@@ -9,10 +8,12 @@ import { ViewPortEntity } from "entities/viewport.entity";
 import { downloadFile } from "download";
 
 import { LayerEZ } from "./layer.ez";
+import { toCorrectPixel } from "px";
 
 export class InteractLayer extends LayerEZ {
   private tr!: Transformer;
   private readonly toolStack: Record<string, Group> = {};
+  private selectedShape: ShapeInput;
   constructor(
     public readonly viewportEntity: ViewPortEntity,
     public readonly assets: {
@@ -86,8 +87,10 @@ export class InteractLayer extends LayerEZ {
     }
     return undefined;
   }
+
   public clearTransformer() {
-    this.setTransformNodes([]);
+    this.tr.nodes([]);
+    this.setSelectedTools(null);
   }
 
   public removeTarget(target: ShapeWithUtilities) {
@@ -98,40 +101,42 @@ export class InteractLayer extends LayerEZ {
   private unTransformTarget(target: Shape) {
     const nodes = this.tr.nodes().slice(); // use slice to have new copy of array
     nodes.splice(nodes.indexOf(target), 1);
-    this.setTransformNodes(nodes);
+    this.tr.nodes(nodes);
+    this.setSelectedTools(null);
   }
 
-  private setTransformNodes(nodes: Node<NodeConfig>[]) {
-    this.tr.nodes(nodes);
-    const currentNodes = this.tr
-      .nodes()
-      .filter((node) => !!(node as ShapeInput).toolable);
-
-    // remove tool when un-select
-    const unStackIds = Object.keys(this.toolStack).filter(
-      (id) => !currentNodes.some((node) => node._id.toString() === id)
-    );
-
-    for (const id of unStackIds) {
-      this.toolStack[id].destroy();
-      delete this.toolStack[id];
+  private setSelectedTools(target: ShapeInput | null) {
+    if (this.selectedShape) {
+      if (
+        !target ||
+        target._id.toString() !== this.selectedShape._id.toString()
+      ) {
+        // destroy previous shape
+        const id = this.selectedShape._id.toString();
+        this.toolStack[id].destroy();
+        delete this.toolStack[id];
+      }
     }
 
+    if (!target || !target.toolable) {
+      this.selectedShape = null;
+      return;
+    }
+    this.selectedShape = target;
+
     // show tool when selected
-    for (const node of currentNodes) {
-      const id = node._id.toString();
-      if (!this.toolStack[id]) {
-        this.toolStack[id] = (
-          node as ShapeWithUtilities
-        ).utilities.generateTransformTools();
-      }
+    const id = this.selectedShape._id.toString();
+    if (!this.toolStack[id]) {
+      this.toolStack[id] = (
+        this.selectedShape as ShapeWithUtilities
+      ).utilities.generateTransformTools();
     }
   }
 
   private setupTransformer() {
     const stage = this.getStage();
     this.tr = new Konva.Transformer({
-      anchorSize: 20,
+      anchorSize: toCorrectPixel(20, true),
     });
     this.originAdd(this.tr);
     stage.on("click tap", (e) => {
@@ -139,7 +144,7 @@ export class InteractLayer extends LayerEZ {
 
       // if click on empty area - remove all selections
       if (target === stage) {
-        this.setTransformNodes([]);
+        this.clearTransformer();
         return;
       }
 
@@ -150,6 +155,7 @@ export class InteractLayer extends LayerEZ {
       ) {
         return;
       }
+      const allowTransform = !!target.draggable(); //only allow transform when draggable = true
 
       // do we pressed shift or ctrl?
       const metaPressed = e.evt.shiftKey || e.evt.ctrlKey || e.evt.metaKey;
@@ -158,15 +164,25 @@ export class InteractLayer extends LayerEZ {
       if (!metaPressed && !isSelected) {
         // if no key pressed and the node is not selected
         // select just one
-        this.setTransformNodes([target]);
+        if (allowTransform) {
+          this.tr.nodes([target]);
+        } else {
+          this.tr.nodes([]);
+        }
+        this.setSelectedTools(target);
       } else if (metaPressed && isSelected) {
         // if we pressed keys and node was selected
         // we need to remove it from selection:
         this.unTransformTarget(target as Shape);
       } else if (metaPressed && !isSelected) {
         // add the node into selection
-        const nodes = this.tr.nodes().concat([target]);
-        this.setTransformNodes(nodes);
+        if (allowTransform) {
+          const nodes = this.tr.nodes().concat([target]);
+          this.tr.nodes(nodes);
+        } else {
+          this.tr.nodes([]);
+        }
+        this.setSelectedTools(target);
       }
     });
   }

@@ -36,6 +36,12 @@ export class TextEZ extends Text implements WithUtilities {
     return this;
   }
 
+  changeStrokeWidth(size: number) {
+    this.strokeWidth(size);
+    this.offset({ x: this.width() / 2, y: this.height() / 2 });
+    return this;
+  }
+
   changeContent(text: string) {
     this.text(text);
     this.offset({ x: this.width() / 2, y: this.height() / 2 });
@@ -43,10 +49,7 @@ export class TextEZ extends Text implements WithUtilities {
   }
 
   getTransformTools(assets: Record<string, HTMLImageElement>): Image[] {
-    const iconSize = Renderer.constrainMax(
-      ToolIconAttr.size * Renderer.pixelDensity(),
-      40
-    );
+    const iconSize = ToolIconAttr.size;
     const settingsBtn = new Image({
       y: 0,
       width: iconSize,

@@ -42,3 +42,16 @@ export async function createImage(src: string): Promise<HTMLImageElement> {
     image.src = src;
   });
 }
+
+export function debounce<Args extends any[] = any[]>(
+  func: (...args: Args) => void,
+  timeout = 300
+) {
+  let timer: NodeJS.Timeout;
+  return (...args: Args) => {
+    clearTimeout(timer);
+    timer = setTimeout(() => {
+      func(...args);
+    }, timeout);
+  };
+}

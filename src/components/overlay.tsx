@@ -24,6 +24,12 @@ const Root = styled.div<{
   transform: rotateX(-90deg);
   transition: transform 200ms ease-in-out;
 
+  ${({ isOpen }) =>
+    isOpen &&
+    css`
+      transform: rotateX(0deg);
+    `}
+
   > div {
     position: relative;
     width: 100%;
@@ -33,12 +39,6 @@ const Root = styled.div<{
     align-items: center;
     justify-content: center;
   }
-
-  ${({ isOpen }) =>
-    isOpen &&
-    css`
-      transform: rotateX(0deg);
-    `}
 `;
 
 const CloseSensor = styled.div`

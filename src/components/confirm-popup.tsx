@@ -6,6 +6,7 @@ import { Overlay, OverlayFuncs } from "./overlay";
 
 const Root = styled.div`
   width: calc(100% - 30px);
+  max-width: 600px;
   min-height: 70px;
   background-color: hsl(28, 80%, 62%);
   border-radius: 4px;
@@ -15,8 +16,8 @@ const Root = styled.div`
 `;
 
 const Content = styled.p`
-  font-size: 0.9rem;
-  line-height: 0.9rem;
+  font-size: 4vw;
+  line-height: 4vw;
   color: #fff;
   text-align: center;
 `;
@@ -35,11 +36,10 @@ const ButtonWrap = styled.div`
 `;
 
 const Button = styled.div<{ negative?: boolean }>`
-  height: 30px;
   background-color: #e74c3c;
   color: #fff;
-  padding: 6px 20px;
-  border-radius: 16px;
+  padding: 1.5vw 5vw;
+  border-radius: 3vw;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -59,16 +59,19 @@ const Header = styled.header`
   align-items: center;
   background-color: hsl(28, 80%, 72%);
 
-  width: 40px;
-  height: 40px;
+  width: 10vw;
+  height: 10vw;
+  max-width: 80px;
+  max-height: 80px;
+
   margin-inline: auto;
   border-radius: 100%;
 
   margin-bottom: 5px;
 
   svg {
-    font-size: 25px;
-    line-height: 25px;
+    font-size: ${10 / 2}vw;
+    line-height: ${10 / 2}vw;
     margin-top: -1px;
     color: #e74c3c;
   }

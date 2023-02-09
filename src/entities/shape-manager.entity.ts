@@ -17,6 +17,7 @@ import { ViewPortEntity } from "./viewport.entity";
 import { openAppSettings, permissionWriteFile } from "download";
 import { TextEZ } from "classes/text.ez";
 import { createImage } from "utils";
+import { toCorrectPixel } from "px";
 
 type Props = {
   copyIcon: Avatar;
@@ -92,16 +93,43 @@ export class ShapeManagerEntity extends RectEntity<Props> {
 
   async setBackground(src: string) {
     const image = await createImage(src);
-    const ratio = image.width / image.height;
-    const size = {
-      width: this.viewportEntity.fixedResolution.width,
-      height: this.viewportEntity.fixedResolution.width / ratio,
-    };
+
+    let ratio: number;
+    let size: { width: number; height: number };
+    const vpFixedResolution = this.viewportEntity.fixedResolution;
+    if (image.width > image.height) {
+      ratio = image.width / image.height;
+      size = {
+        width: vpFixedResolution.width,
+        height: vpFixedResolution.width / ratio,
+      };
+      if (size.height > vpFixedResolution.height) {
+        ratio = image.height / image.width;
+        size = {
+          width: vpFixedResolution.height / ratio,
+          height: vpFixedResolution.height,
+        };
+      }
+    } else {
+      ratio = image.height / image.width;
+      size = {
+        width: vpFixedResolution.height / ratio,
+        height: vpFixedResolution.height,
+      };
+      if (size.width > vpFixedResolution.width) {
+        ratio = image.width / image.height;
+        size = {
+          width: vpFixedResolution.width,
+          height: vpFixedResolution.width / ratio,
+        };
+      }
+    }
+
     if (this.background) {
       this.background.image(image);
       this.background.setAttrs({
         ...size,
-        draggable: true,
+        draggable: false,
       });
     } else {
       this.background = new ImageEZ({
@@ -111,10 +139,14 @@ export class ShapeManagerEntity extends RectEntity<Props> {
         image,
         name: "background",
       });
+      this.background.setAttrs({
+        draggable: false,
+      });
       (this.background as ShapeInput).canDuplicate = false;
       (this.background as ShapeInput).onBeforeDestroy = () => {
         this.background = null;
       };
+
       this.interactLayer.add(this.background);
       this.background.moveToBottom();
     }
@@ -135,9 +167,11 @@ export class ShapeManagerEntity extends RectEntity<Props> {
   addText() {
     const ez = new TextEZ({
       ...this.randomPositionByAmplitude(this.viewportEntity.basePosition),
-      text: "Hello EZ!!!",
+      text: "Hello\nEZ!!!",
       fill: "#fff",
-      fontSize: 29,
+      stroke: "#000",
+      strokeWidth: 1,
+      fontSize: Math.floor(toCorrectPixel(60)),
       fontStyle: "bold",
       fontFamily: "Noto Sans",
     });

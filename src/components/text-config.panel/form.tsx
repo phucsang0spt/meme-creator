@@ -6,7 +6,6 @@ import { Scroll } from "components/scroll";
 import { SettingsProperty } from "components/settings-property";
 import { Writer } from "components/writer";
 import { useDrawerData } from "hooks/drawer.hook";
-import { useCallback } from "react";
 import styled from "styled-components";
 
 const fontStyleOptions = [
@@ -31,34 +30,14 @@ const Root = styled.div`
 export function TextConfigForm() {
   const data = useDrawerData<{ selectedText: TextEZ }>();
 
-  const handleChangeContent = useCallback(
-    (text: string) => {
-      data.selectedText.changeContent(text);
-    },
-    [data.selectedText]
-  );
-
-  const handleChangeColor = useCallback(
-    (color: string) => {
-      data.selectedText.fill(color);
-    },
-    [data.selectedText]
-  );
   return (
     <Root>
       <Scroll>
         <SettingsProperty label="Content">
           <Writer
             defaultValue={data.selectedText.text()}
-            onSave={handleChangeContent}
-          />
-        </SettingsProperty>
-        <SettingsProperty label="Font size">
-          <NumericRange
-            range={[13, 50]}
-            defaultValue={data.selectedText.fontSize()}
-            onChange={(size) => {
-              data.selectedText.changeFontSize(size);
+            onSave={(text) => {
+              data.selectedText.changeContent(text);
             }}
           />
         </SettingsProperty>
@@ -72,10 +51,41 @@ export function TextConfigForm() {
             }}
           />
         </SettingsProperty>
+        <SettingsProperty label="Font size">
+          <NumericRange
+            range={[13, 120]}
+            getLabel={(value) => `${value}px`}
+            defaultValue={data.selectedText.fontSize()}
+            onSave={(size) => {
+              data.selectedText.changeFontSize(size);
+            }}
+          />
+        </SettingsProperty>
         <SettingsProperty label="Color">
           <ColorPicker
             defaultValue={data.selectedText.fill()}
-            onSave={handleChangeColor}
+            onSave={(color) => {
+              data.selectedText.fill(color);
+            }}
+          />
+        </SettingsProperty>
+
+        <SettingsProperty label="Stroke width">
+          <NumericRange
+            range={[0, 10]}
+            getLabel={(value) => `${value}px`}
+            defaultValue={data.selectedText.strokeWidth()}
+            onSave={(size) => {
+              data.selectedText.changeStrokeWidth(size);
+            }}
+          />
+        </SettingsProperty>
+        <SettingsProperty label="Stroke color">
+          <ColorPicker
+            defaultValue={data.selectedText.stroke()}
+            onSave={(color) => {
+              data.selectedText.stroke(color);
+            }}
           />
         </SettingsProperty>
       </Scroll>

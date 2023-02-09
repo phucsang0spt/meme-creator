@@ -3,11 +3,14 @@ import {
   forwardRef,
   ReactNode,
   Ref,
+  useEffect,
   useImperativeHandle,
   useState,
 } from "react";
 import styled, { css } from "styled-components";
+import { SpinnerCircular } from "spinners-react";
 
+const TRANSITION_DURATION = 200;
 const Root = styled.div<{
   isOpen: boolean;
 }>`
@@ -25,7 +28,7 @@ const Root = styled.div<{
   }
 
   left: 100%;
-  transition: left 200ms ease-in-out;
+  transition: left ${TRANSITION_DURATION}ms ease-in-out;
 
   ${({ isOpen }) =>
     isOpen &&
@@ -73,6 +76,15 @@ const Section = styled.section`
   }
 `;
 
+const SpinIndicator = styled.div`
+  width: 100%;
+  height: 70%;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`;
+
 type DrawerData = Record<string, any>;
 
 export type DrawerFuncs = {
@@ -100,7 +112,7 @@ export const Drawer = forwardRef(function Drawer(
           : undefined
         : defaultOpen,
   });
-  const [mountContent, setMountContent] = useState(!!defaultOpen);
+  // const [mountContent, setMountContent] = useState(!!defaultOpen);
 
   useImperativeHandle(
     ref,
@@ -110,7 +122,7 @@ export const Drawer = forwardRef(function Drawer(
           isOpen: true,
           data,
         });
-        setMountContent(true);
+        // setMountContent(true);
       },
     }),
     []
@@ -122,7 +134,7 @@ export const Drawer = forwardRef(function Drawer(
       onTransitionEnd={() => {
         // closed after transition
         if (!present.isOpen) {
-          setMountContent(false);
+          // setMountContent(false);
           setPresent((prev) => ({ ...prev, data: undefined }));
         }
       }}
@@ -133,15 +145,43 @@ export const Drawer = forwardRef(function Drawer(
             setPresent((prev) => ({ ...prev, isOpen: false }));
           }}
         />
-        {mountContent && (
-          <Section>
-            <DrawerDataContext.Provider value={present.data}>
-              <div>{header}</div>
-              <main>{children}</main>
-            </DrawerDataContext.Provider>
-          </Section>
-        )}
+        <Section>
+          <div>{header}</div>
+          {present.isOpen && (
+            <ContentIndicator data={present.data}>{children}</ContentIndicator>
+          )}
+        </Section>
       </div>
     </Root>
   );
 });
+
+function ContentIndicator({
+  children,
+  data,
+}: {
+  children: ReactNode;
+  data: DrawerData;
+}) {
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    // wait for transition completed to avoid lagging if content large
+    const timer = setTimeout(() => {
+      setLoading(false);
+    }, TRANSITION_DURATION + 100);
+
+    return () => {
+      clearTimeout(timer);
+    };
+  }, []);
+  return loading ? (
+    <SpinIndicator>
+      <SpinnerCircular color="#3399cc" size={30} />
+    </SpinIndicator>
+  ) : (
+    <DrawerDataContext.Provider value={data}>
+      <main>{children}</main>
+    </DrawerDataContext.Provider>
+  );
+}
