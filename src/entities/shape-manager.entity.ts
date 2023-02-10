@@ -18,6 +18,7 @@ import { openAppSettings, permissionWriteFile } from "download";
 import { TextEZ } from "classes/text.ez";
 import { createImage } from "utils";
 import { toCorrectPixel } from "px";
+import { StuffValue } from "../constants";
 
 type Props = {
   copyIcon: Avatar;
@@ -167,10 +168,10 @@ export class ShapeManagerEntity extends RectEntity<Props> {
   addText() {
     const ez = new TextEZ({
       ...this.randomPositionByAmplitude(this.viewportEntity.basePosition),
-      text: "Hello\nEZ!!!",
+      text: StuffValue.DEFAULT_NEW_TEXT,
       fill: "#fff",
       stroke: "#000",
-      strokeWidth: 1,
+      strokeWidth: 2,
       fontSize: Math.floor(toCorrectPixel(60)),
       fontStyle: "bold",
       fontFamily: "Noto Sans",

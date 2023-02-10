@@ -5,6 +5,7 @@ import { RadioGroup } from "components/radio-group";
 import { Scroll } from "components/scroll";
 import { SettingsProperty } from "components/settings-property";
 import { Writer } from "components/writer";
+import { StuffValue } from "../../constants";
 import { useDrawerData } from "hooks/drawer.hook";
 import styled from "styled-components";
 
@@ -30,12 +31,17 @@ const Root = styled.div`
 export function TextConfigForm() {
   const data = useDrawerData<{ selectedText: TextEZ }>();
 
+  const selectedTextContent = data.selectedText.text();
   return (
     <Root>
       <Scroll>
         <SettingsProperty label="Content">
           <Writer
-            defaultValue={data.selectedText.text()}
+            defaultValue={
+              selectedTextContent === StuffValue.DEFAULT_NEW_TEXT
+                ? ""
+                : selectedTextContent
+            }
             onSave={(text) => {
               data.selectedText.changeContent(text);
             }}

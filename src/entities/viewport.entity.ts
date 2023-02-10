@@ -53,7 +53,7 @@ export class ViewPortEntity extends RectEntity<Props> {
     );
     this.basePosition.y = -distanceUpCamera;
     this.basePosition.y += this.renderer.scaler.screenUnitToCanvasUnit(
-      FloatIconSize + toCorrectPixel(10 + 25)
+      FloatIconSize + toCorrectPixel(15 + 25)
     );
     return {
       sprite: new LogicComponent([

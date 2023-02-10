@@ -4,7 +4,7 @@ import { MdSettings } from "@react-icons/all-files/md/MdSettings";
 import { MdBurstMode } from "@react-icons/all-files/md/MdBurstMode";
 import { MdTheaters } from "@react-icons/all-files/md/MdTheaters";
 import { FiImage } from "@react-icons/all-files/fi/FiImage";
-import { FiStar } from "@react-icons/all-files/fi/FiStar";
+// import { FiStar } from "@react-icons/all-files/fi/FiStar";
 import { useScene } from "react-simple-game-engine/lib/utilities";
 import { toCorrectPixel } from "px";
 
@@ -146,40 +146,40 @@ const Logo = styled.div`
   }
 `;
 
-const RateUs = styled.div`
-  display: flex;
-  justify-content: flex-end;
+// const RateUs = styled.div`
+//   display: flex;
+//   justify-content: flex-end;
 
-  padding: 8px;
+//   padding: 8px;
 
-  > p {
-    display: inline-flex;
-    align-items: center;
-    justify-content: flex-end;
+//   > p {
+//     display: inline-flex;
+//     align-items: center;
+//     justify-content: flex-end;
 
-    font-size: 1.2rem;
-    line-height: 1.2rem;
-    color: hsl(28, 80%, 72%);
+//     font-size: 1.2rem;
+//     line-height: 1.2rem;
+//     color: hsl(28, 80%, 72%);
 
-    svg {
-      margin-left: 5px;
-    }
+//     svg {
+//       margin-left: 5px;
+//     }
 
-    padding-bottom: 2px;
-    border-bottom: 1px solid currentColor;
-  }
-`;
+//     padding-bottom: 2px;
+//     border-bottom: 1px solid currentColor;
+//   }
+// `;
 
 export function MenuUI() {
   const scene = useScene();
   return (
     <Root>
-      <RateUs>
+      {/* <RateUs>
         <p>
           Rate Us
           <FiStar />
         </p>
-      </RateUs>
+      </RateUs> */}
       <Floater>
         <Logo>
           <MdSettings size={100} />
