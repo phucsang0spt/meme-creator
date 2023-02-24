@@ -136,7 +136,10 @@ export class InteractLayer extends LayerEZ {
   private setupTransformer() {
     const stage = this.getStage();
     this.tr = new Konva.Transformer({
-      anchorSize: toCorrectPixel(20, true),
+      anchorSize: toCorrectPixel(16, true),
+      anchorStrokeWidth: 0,
+      keepRatio: true,
+      rotateEnabled: false,
     });
     this.originAdd(this.tr);
     stage.on("click tap", (e) => {
@@ -307,7 +310,12 @@ export class InteractLayer extends LayerEZ {
     if (shape.canDuplicate == null) {
       shape.canDuplicate = true;
     }
-
+    if (shape.canRefresh == null) {
+      shape.canRefresh = true;
+    }
+    if (shape.canUpDown == null) {
+      shape.canUpDown = true;
+    }
     const addedShape = super.add(shape);
 
     this.tr.moveToTop();

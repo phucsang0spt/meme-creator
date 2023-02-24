@@ -24,22 +24,6 @@ export class ShapeUtilities {
     const layer = shape.getLayer() as InteractLayer;
     const viewportEntity = layer.viewportEntity;
 
-    const moveUp = new Image({
-      y: 0,
-      offsetX: iconSize / 2,
-      offsetY: iconSize / 2,
-      width: iconSize,
-      height: iconSize,
-      image: layer.assets.layerUpIcon,
-    });
-    const moveDown = new Image({
-      y: 0,
-      offsetX: iconSize / 2,
-      offsetY: iconSize / 2,
-      width: iconSize,
-      height: iconSize,
-      image: layer.assets.layerDownIcon,
-    });
     const deleteBtn = new Image({
       y: 0,
       offsetX: iconSize / 2,
@@ -48,18 +32,10 @@ export class ShapeUtilities {
       width: iconSize,
       height: iconSize,
     });
-    const refreshBtn = new Image({
-      y: 0,
-      offsetX: iconSize / 2,
-      offsetY: iconSize / 2,
-      image: layer.assets.refreshIcon,
-      width: iconSize,
-      height: iconSize,
-    });
 
-    refreshBtn.on("click tap", () => {
-      shape.scale({ x: 1, y: 1 });
-      shape.rotation(0);
+    deleteBtn.on("click tap", () => {
+      // delete shape
+      layer.removeTarget(shape);
     });
 
     deleteBtn.on("click tap", () => {
@@ -67,26 +43,23 @@ export class ShapeUtilities {
       layer.removeTarget(shape);
     });
 
-    moveDown.on("click tap", () => {
-      shape.moveDown();
-    });
+    let tools = [deleteBtn];
+    if ((shape as ShapeInput).canRefresh) {
+      const refreshBtn = new Image({
+        y: 0,
+        offsetX: iconSize / 2,
+        offsetY: iconSize / 2,
+        image: layer.assets.refreshIcon,
+        width: iconSize,
+        height: iconSize,
+      });
 
-    moveUp.on("click tap", () => {
-      if (shape.getZIndex() < layer.maxZIndex) {
-        shape.moveUp();
-      }
-    });
-
-    deleteBtn.on("click tap", () => {
-      // delete shape
-      layer.removeTarget(shape);
-    });
-
-    const tools = [
-      deleteBtn,
-      refreshBtn,
-      ...(shape.getTransformTools?.(layer.assets) || []),
-    ];
+      refreshBtn.on("click tap", () => {
+        shape.scale({ x: 1, y: 1 });
+        shape.rotation(0);
+      });
+      tools.push(refreshBtn);
+    }
     if ((shape as ShapeInput).canDuplicate) {
       const duplicateBtn = new Image({
         y: 0,
@@ -102,7 +75,36 @@ export class ShapeUtilities {
       });
       tools.push(duplicateBtn);
     }
-    tools.push(moveUp, moveDown);
+    tools = [...tools, ...(shape.getTransformTools?.(layer.assets) || [])];
+
+    if ((shape as ShapeInput).canUpDown) {
+      const moveUp = new Image({
+        y: 0,
+        offsetX: iconSize / 2,
+        offsetY: iconSize / 2,
+        width: iconSize,
+        height: iconSize,
+        image: layer.assets.layerUpIcon,
+      });
+      const moveDown = new Image({
+        y: 0,
+        offsetX: iconSize / 2,
+        offsetY: iconSize / 2,
+        width: iconSize,
+        height: iconSize,
+        image: layer.assets.layerDownIcon,
+      });
+      moveDown.on("click tap", () => {
+        shape.moveDown();
+      });
+
+      moveUp.on("click tap", () => {
+        if (shape.getZIndex() < layer.maxZIndex) {
+          shape.moveUp();
+        }
+      });
+      tools.push(moveUp, moveDown);
+    }
 
     const holderWidth = toCorrectPixel(10) + iconSize + toCorrectPixel(10);
     const holderHeight =

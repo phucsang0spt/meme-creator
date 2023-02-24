@@ -47,6 +47,10 @@ export class ImageModeScene extends Scene<{}> {
   @SpriteFrom(refreshIcon)
   refreshIcon: Avatar;
 
+  onBootstrapDone() {
+    Renderer.noLoop();
+  }
+
   getComponents() {
     return [
       new LogicComponent([BackgroundEntity, {}]),

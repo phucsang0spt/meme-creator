@@ -32,11 +32,11 @@ export function Copyright() {
       <span
         onClick={(e) => {
           Browser.open({
-            url: "https://www.freepik.com/free-vector/various-emoji-faces-flat-icons-big-set_13683727.htm#query=emoji%20icons&position=0&from_view=search&track=sph",
+            url: "https://iconscout.com/icon-pack/emoji-45",
           });
         }}
       >
-        - Image by pch.vector on Freepik
+        - Emoji Icon Pack by IconScout Store
       </span>
     </Root>
   );

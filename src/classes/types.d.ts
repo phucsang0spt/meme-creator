@@ -4,6 +4,8 @@ type ShapeInput = (
 ) & {
   toolable?: boolean;
   canDuplicate?: boolean;
+  canRefresh?: boolean;
+  canUpDown?: boolean;
   onBeforeDestroy?: () => void;
 };
 

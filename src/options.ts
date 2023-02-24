@@ -8,15 +8,15 @@ export const ContextModes = [
 
 export const Resolutions = {
   HD: {
-    width: 720,
+    width: 740,
     height: 1280,
   },
   FULL_HD: {
-    width: 1080,
+    width: 1100,
     height: 1920,
   },
   TWO_K: {
-    width: 1440,
+    width: 1460,
     height: 2560,
   },
 };

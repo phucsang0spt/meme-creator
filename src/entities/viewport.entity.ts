@@ -20,7 +20,10 @@ import { toCorrectPixel } from "px";
 type Props = {};
 
 export class ViewPortEntity extends RectEntity<Props> {
-  public readonly fixedResolution: Size = { width: 432, height: 768 };
+  public readonly fixedResolution: Size = {
+    width: Resolutions.HD.width * 0.6,
+    height: Resolutions.HD.height * 0.6,
+  };
   public readonly basePosition: Point = {
     x: 0,
     y: 0,

@@ -1,6 +1,6 @@
 import styled, { css, keyframes } from "styled-components";
 import SquareDiv from "react-square-div";
-import { SpinnerCircular } from "spinners-react";
+import { SpinnerDiamond } from "spinners-react";
 import { CSSProperties } from "react";
 
 const ShakeKF = keyframes`
@@ -60,7 +60,10 @@ const Thumbnail = styled.img`
 `;
 
 const Loader = styled.div`
-  height: 100%;
+  width: 100%;
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -82,7 +85,7 @@ export function GridPic({
 }: GridPicProps) {
   return loading ? (
     <Loader>
-      <SpinnerCircular color="#39c" size={30} />
+      <SpinnerDiamond thickness={40} speed={400} color="#3d9c44" size={130} />
     </Loader>
   ) : (
     <Root column={column} shake={shake}>

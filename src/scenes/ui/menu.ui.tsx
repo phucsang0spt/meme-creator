@@ -101,14 +101,14 @@ const ModeItem = styled.div`
   }
 `;
 
-const Footer = styled.footer`
-  margin-top: 20px;
+const TopTitle = styled.footer`
+  margin-bottom: 20px;
 
   width: 100%;
   border-radius: 4px;
 
-  font-size: 2rem;
-  line-height: 2rem;
+  font-size: ${toCorrectPixel(38)}px;
+  line-height: ${toCorrectPixel(38)}px;
   color: #e1e1e1;
 
   display: flex;
@@ -185,6 +185,7 @@ export function MenuUI() {
           <MdSettings size={100} />
         </Logo>
         <Body>
+          <TopTitle>Meme EZ!!</TopTitle>
           <ModeList>
             <div onClick={() => scene.switchToScene("image-mode")}>
               <SquareDiv>
@@ -217,7 +218,6 @@ export function MenuUI() {
               </SquareDiv>
             </div>
           </ModeList>
-          <Footer>Meme EZ!!</Footer>
         </Body>
       </Floater>
     </Root>

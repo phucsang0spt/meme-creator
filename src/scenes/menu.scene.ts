@@ -3,4 +3,8 @@ import { MenuUI } from "./ui/menu.ui";
 
 @SceneTag("menu")
 @SceneUI(MenuUI)
-export class MenuScene extends Scene<{}> {}
+export class MenuScene extends Scene<{}> {
+  onBootstrapDone() {
+    Renderer.noLoop();
+  }
+}

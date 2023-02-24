@@ -1,4 +1,5 @@
 import { genId } from "utils";
+import { getPattern } from "./pattern";
 
 const paths = (require as any)
   .context(
@@ -7,12 +8,11 @@ const paths = (require as any)
     /^assets\/message-boxes\/[a-zA-Z0-9|-]+\.(png|jpg|jpeg)$/
   )
   .keys();
+const pattern = getPattern("message-boxes");
 
 export const messageBoxes = paths
   .map((path: string) => {
-    const [, code] =
-      path.match(/^assets\/message-boxes\/([a-zA-Z0-9|-]+)\.(png|jpg|jpeg)/) ||
-      [];
+    const [, code] = path.match(pattern) || [];
     return code
       ? {
           id: genId(),

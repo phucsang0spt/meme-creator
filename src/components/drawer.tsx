@@ -78,7 +78,7 @@ const Section = styled.section`
 
 const SpinIndicator = styled.div`
   width: 100%;
-  height: 70%;
+  height: calc(100% - 100px);
 
   display: flex;
   align-items: center;
@@ -169,7 +169,7 @@ function ContentIndicator({
     // wait for transition completed to avoid lagging if content large
     const timer = setTimeout(() => {
       setLoading(false);
-    }, TRANSITION_DURATION + 100);
+    }, TRANSITION_DURATION + 200);
 
     return () => {
       clearTimeout(timer);

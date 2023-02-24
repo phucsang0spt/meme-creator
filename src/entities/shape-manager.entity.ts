@@ -143,6 +143,8 @@ export class ShapeManagerEntity extends RectEntity<Props> {
       this.background.setAttrs({
         draggable: false,
       });
+      (this.background as ShapeInput).canUpDown = false;
+      (this.background as ShapeInput).canRefresh = false;
       (this.background as ShapeInput).canDuplicate = false;
       (this.background as ShapeInput).onBeforeDestroy = () => {
         this.background = null;
