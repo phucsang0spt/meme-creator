@@ -22,7 +22,7 @@ export function useFetchGalleyMemeTemplates() {
         push(
           "data",
           galleryMemeTemplates.filter((tl) =>
-            tl.tags.some((tag) => tag.includes(_keyword))
+            tl.tags.some((tag) => tag.startsWith(_keyword))
           )
         );
       } else {
