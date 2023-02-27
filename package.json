@@ -35,6 +35,7 @@
     "start": "PORT=4444 react-scripts start",
     "build": "react-scripts build",
     "build:apk": "cordova-res android --skip-config --copy && ionic capacitor copy android && cd android && ./gradlew assembleDebug && cd ..",
+    "build:android": "yarn run build && ionic capacitor copy android",
     "ios": "ionic capacitor copy ios && ionic capacitor run ios -l --external -livereload",
     "android": "ionic capacitor copy android && ionic capacitor run android -l --external -livereload",
     "setup-res:ios": "cordova-res ios --skip-config --copy",
